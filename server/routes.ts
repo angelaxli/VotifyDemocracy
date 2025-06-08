@@ -142,30 +142,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Federal representatives (same for all locations)
       representatives.push({
         id: 1,
-        name: "Joe Biden",
+        name: "Donald Trump",
         office: "President of the United States", 
-        party: "Democratic Party",
+        party: "Republican Party",
         phone: "(202) 456-1414",
         email: null,
         website: "https://www.whitehouse.gov/",
-        photoUrl: "https://www.whitehouse.gov/wp-content/uploads/2021/01/20210120-Official-Portrait-of-President-Joe-Biden.jpg",
+        photoUrl: null,
         address: null,
         jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
         level: "federal",
         socialLinks: [
-          { type: "twitter", url: "https://twitter.com/POTUS" },
-          { type: "facebook", url: "https://facebook.com/POTUS" }
+          { type: "twitter", url: "https://twitter.com/realDonaldTrump" },
+          { type: "facebook", url: "https://facebook.com/DonaldTrump" }
         ],
         stances: {
-          "Climate Change": "Supports Paris Climate Agreement and clean energy transition",
-          "Healthcare": "Supports strengthening ACA and lowering prescription drug costs", 
-          "Economy": "Focus on infrastructure investment and job creation"
+          "Immigration": "Supports border security measures and immigration enforcement",
+          "Economy": "Focuses on America First policies and trade deals", 
+          "Energy": "Supports domestic energy production and deregulation"
         },
         recentBills: [
           {
-            title: "Infrastructure Investment and Jobs Act",
-            position: "Signed",
-            description: "Bipartisan law investing in roads, bridges, broadband, and clean energy"
+            title: "America First Energy Policy",
+            position: "Promoted",
+            description: "Advancing domestic energy independence and production"
           }
         ]
       });

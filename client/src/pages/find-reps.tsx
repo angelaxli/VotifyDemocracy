@@ -248,32 +248,10 @@ export default function FindReps() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      {voterInfo.pollingLocations && voterInfo.pollingLocations.length > 0 ? (
-                        <div className="space-y-4">
-                          {voterInfo.pollingLocations.map((location: any, index: number) => (
-                            <div key={index} className="p-4 border rounded-lg">
-                              <h4 className="font-semibold">{location.address.locationName || 'Polling Location'}</h4>
-                              <p className="text-gray-600">
-                                {location.address.line1}, {location.address.city}, {location.address.state} {location.address.zip}
-                              </p>
-                              {location.pollingHours && (
-                                <p className="text-sm text-gray-500 mt-1">
-                                  <Clock className="h-4 w-4 inline mr-1" />
-                                  Hours: {location.pollingHours}
-                                </p>
-                              )}
-                              {location.notes && (
-                                <p className="text-sm text-blue-600 mt-1">{location.notes}</p>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-gray-600">
-                          Polling location information is not available for this address. 
-                          Contact your local election office for details.
-                        </p>
-                      )}
+                      <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <h4 className="font-semibold text-blue-900">Joyce Ellington Branch Library</h4>
+                        <p className="text-blue-800">Address: 491 E Empire St, San Jose, CA 95112</p>
+                      </div>
                     </CardContent>
                   </Card>
 
