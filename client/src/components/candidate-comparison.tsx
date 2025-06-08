@@ -217,7 +217,7 @@ export default function CandidateComparison() {
                   
                   {Object.entries(candidate.positions).map(([issue, position]) => (
                     <div key={issue}>
-                      <h7 className="font-medium text-sm">{issue}</h7>
+                      <h6 className="font-medium text-sm">{issue}</h6>
                       <p className="text-xs text-gray-600 mt-1">{position}</p>
                     </div>
                   ))}
