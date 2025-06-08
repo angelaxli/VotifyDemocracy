@@ -1,0 +1,38 @@
+Homepage: 
+- Name of our site is “Votify”. Catchphrase is “Because Democracy Isn’t a Guessing Game.”
+- Address/ZIP input + CTA button: “Find My Reps”
+- Quick Preview (Below fold):
+    - 3 card previews: Rep Profile, Candidate Compare, Election Dates
+Features:
+1. Find your Current Representative:
+    - Allow User to enter in Zip Code
+    - Top bar: “Change address” button
+    - Find current elected officials (Local and national)
+    - Use Google Civic Information API
+    - Display Name, office, party, contact info, photo (if available)
+    - Provide detailed profile when you click “Find More”. Include:
+        - Rep Stances & Bills
+            - Shows rep stances on 3–5 major issues/ current hot topics: Abortion, LGBTQ+, Gun Policies, Climate, Homelessness
+            - Summarizes 1–2 recent bills they supported/opposed
+            - Uses plain, accessible language
+        - Give Contact Information
+            - Provides phone, email, social links
+            - MVP: Easy — mailto/email links, phone number click
+            - Bonus: Use EmailJS or Formspree for in-browser sending
+    - UI/UX: Use hover effects for desktop 
+2. Upcoming Elections 
+    - Header: “Upcoming Elections in [User's Location]”
+    - Dropdown: Local and National  
+    - Shows next local/state/national election date
+    - hows early voting or registration deadlines
+    - Link to your local election office
+    - MVP: Static info
+3. Side by Side candidate comparison for races
+    - In this demo site, we will just do two examples: one local race and one national race
+    - Displays side-by-side candidate bios
+    - Manual data entry for 1–2 local races
+        - General Information ex.  Name, office, party, contact info,
+        - Headshot of candidate
+        - Takes on current hot topics: Abortion, LGBTQ+, Gun Policies, Climate, Homelessness, 
+        - Supported/Passed Bills and a summary of the bill in simple language
+Note: I will be manually inputting the detailed candidate profile information etc.. Please just provide filler information at the moment. JSON files for Static data for reps, candidates, stances etc.
