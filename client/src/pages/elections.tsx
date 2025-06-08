@@ -20,6 +20,7 @@ export default function Elections() {
   };
 
   const userLocation = getUserLocation();
+  const searchResults = true; // Show voting information section by default
   
   const { data: elections, isLoading, error } = useQuery({
     queryKey: ["/api/elections", userLocation.state, userLocation.city],
@@ -67,10 +68,19 @@ export default function Elections() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Upcoming Elections</h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-4">
             Stay informed about upcoming elections in your area. Find election dates, types, and jurisdictions 
             to make sure you're prepared to vote.
           </p>
+          <a 
+            href="https://www.vote.org/polling-place-locator/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center text-civic-blue hover:text-civic-blue-dark font-medium"
+          >
+            <ExternalLink className="h-4 w-4 mr-2" />
+            Find polling location
+          </a>
         </div>
 
         {isLoading && (
@@ -83,6 +93,39 @@ export default function Elections() {
         {error && (
           <div className="text-center py-12">
             <p className="text-red-600">Failed to load election data. Please try again later.</p>
+          </div>
+        )}
+
+        {/* Voting Information Section - moved to top */}
+        {searchResults && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Voting Information for Your Area</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div>
+                <h3 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-civic-blue" />
+                  Where do I vote?
+                </h3>
+                <p className="text-sm text-gray-600 mb-2">
+                  Joyce Ellington Branch Library
+                </p>
+                <p className="text-sm text-gray-600">
+                  Address: 491 E Empire St, San Jose, CA 95112
+                </p>
+              </div>
+              <div>
+                <h3 className="font-medium text-gray-900 mb-2">Register to Vote</h3>
+                <p className="text-sm text-gray-600">
+                  Make sure you're registered to vote in your state. Registration deadlines vary by location.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-medium text-gray-900 mb-2">Early Voting</h3>
+                <p className="text-sm text-gray-600">
+                  Many jurisdictions offer early voting options. Check if early voting is available in your area.
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
@@ -122,14 +165,9 @@ export default function Elections() {
                   </div>
                   
                   <div className="pt-4 border-t border-gray-100">
-                    <p className="text-sm text-gray-500 mb-3">
+                    <p className="text-sm text-gray-500">
                       Make sure you're registered to vote and know your polling location.
                     </p>
-                    
-                    <div className="flex items-center text-civic-blue text-sm font-medium hover:text-civic-blue-dark cursor-pointer">
-                      <ExternalLink className="h-4 w-4 mr-1" />
-                      Find polling location
-                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -145,29 +183,7 @@ export default function Elections() {
           </div>
         )}
 
-        <div className="mt-12 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Election Information</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div>
-              <h3 className="font-medium text-gray-900 mb-2">Register to Vote</h3>
-              <p className="text-sm text-gray-600">
-                Make sure you're registered to vote in your state. Registration deadlines vary by location.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-900 mb-2">Find Your Polling Place</h3>
-              <p className="text-sm text-gray-600">
-                Locate your designated polling location and check voting hours for election day.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-900 mb-2">Early Voting</h3>
-              <p className="text-sm text-gray-600">
-                Many jurisdictions offer early voting options. Check if early voting is available in your area.
-              </p>
-            </div>
-          </div>
-        </div>
+        
       </div>
       
       <Footer />

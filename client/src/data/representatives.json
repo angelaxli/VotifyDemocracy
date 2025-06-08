@@ -91,5 +91,36 @@
         "description": "Expanded mental health and substance abuse treatment programs citywide."
       }
     ]
+  },
+  {
+    "id": 4,
+    "name": "Matt Mahan",
+    "office": "Mayor",
+    "party": "Nonpartisan",
+    "phone": "(408) 535-4800",
+    "email": "mayorsoffice@sanjoseca.gov",
+    "website": "https://www.sanjoseca.gov/your-government/departments-offices/mayor",
+    "address": "200 E Santa Clara St, San José, CA 95113",
+    "jurisdiction": "san jose, ca",
+    "level": "local",
+    "stances": {
+      "Climate Change": "Committed to carbon neutrality and expanding renewable energy infrastructure throughout San José.",
+      "Gun Policies": "Supports evidence-based gun safety measures while respecting constitutional rights.",
+      "Healthcare": "Advocates for accessible healthcare services and mental health resources for all residents.",
+      "LGBTQ+": "Strong supporter of LGBTQ+ rights and inclusive policies in city government.",
+      "Homelessness": "Implementing comprehensive strategy to address homelessness through housing, services, and prevention."
+    },
+    "recentBills": [
+      {
+        "title": "Affordable Housing Initiative",
+        "position": "Supported",
+        "description": "Approved new affordable housing development projects to address housing crisis."
+      },
+      {
+        "title": "Climate Action Plan",
+        "position": "Supported",
+        "description": "Implemented comprehensive climate action plan with emissions reduction targets."
+      }
+    ]
   }
 ]
