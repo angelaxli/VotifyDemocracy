@@ -20,6 +20,7 @@ export const representatives = pgTable("representatives", {
   address: text("address"),
   jurisdiction: text("jurisdiction").notNull(),
   level: text("level").notNull(), // federal, state, local
+  socialLinks: json("social_links").$type<Array<{type: string, url: string}>>(),
   stances: json("stances").$type<Record<string, string>>(),
   recentBills: json("recent_bills").$type<Array<{title: string, position: string, description: string}>>(),
 });

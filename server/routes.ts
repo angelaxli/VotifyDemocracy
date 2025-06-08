@@ -3,9 +3,54 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertAddressSearchSchema } from "@shared/schema";
 
+interface GoogleCivicOfficial {
+  name: string;
+  party?: string;
+  phones?: string[];
+  emails?: string[];
+  urls?: string[];
+  photoUrl?: string;
+  channels?: Array<{
+    type: string;
+    id: string;
+  }>;
+}
+
+interface GoogleCivicOffice {
+  name: string;
+  divisionId: string;
+  levels?: string[];
+  roles?: string[];
+  officialIndices: number[];
+}
+
+interface GoogleCivicResponse {
+  normalizedInput: {
+    line1: string;
+    city: string;
+    state: string;
+    zip: string;
+  };
+  divisions: Record<string, {
+    name: string;
+    officeIndices?: number[];
+  }>;
+  offices: GoogleCivicOffice[];
+  officials: GoogleCivicOfficial[];
+}
+
+interface GoogleElectionsResponse {
+  elections: Array<{
+    id: string;
+    name: string;
+    electionDay: string;
+    ocdDivisionId: string;
+  }>;
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   
-  // Search for representatives by address/zip
+  // Search for representatives by address/zip using Google Civic Information API
   app.post("/api/representatives/search", async (req, res) => {
     try {
       const { address } = req.body;
@@ -14,30 +59,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Address is required" });
       }
 
+      const googleApiKey = process.env.GOOGLE_API_KEY;
+      if (!googleApiKey) {
+        return res.status(500).json({ error: "Google API key not configured" });
+      }
+
+      // Call Google Civic Information API
+      const googleApiUrl = `https://www.googleapis.com/civicinfo/v2/representatives?key=${googleApiKey}&address=${encodeURIComponent(address)}`;
+      
+      const response = await fetch(googleApiUrl);
+      if (!response.ok) {
+        console.error("Google Civic API error:", response.status, response.statusText);
+        return res.status(500).json({ error: "Failed to fetch representative data" });
+      }
+
+      const data: GoogleCivicResponse = await response.json();
+      
+      // Transform Google API data to our format
+      const representatives = [];
+      
+      for (let i = 0; i < data.offices.length; i++) {
+        const office = data.offices[i];
+        
+        for (const officialIndex of office.officialIndices) {
+          const official = data.officials[officialIndex];
+          
+          if (official) {
+            // Determine level (federal, state, local)
+            let level = "local";
+            if (office.levels?.includes("country")) {
+              level = "federal";
+            } else if (office.levels?.includes("administrativeArea1")) {
+              level = "state";
+            }
+
+            // Build social media links from channels
+            const socialLinks = official.channels?.map(channel => ({
+              type: channel.type.toLowerCase(),
+              url: channel.type.toLowerCase() === 'twitter' 
+                ? `https://twitter.com/${channel.id}`
+                : channel.type.toLowerCase() === 'facebook'
+                ? `https://facebook.com/${channel.id}`
+                : `https://${channel.type.toLowerCase()}.com/${channel.id}`
+            })) || [];
+
+            representatives.push({
+              id: representatives.length + 1,
+              name: official.name,
+              office: office.name,
+              party: official.party || null,
+              phone: official.phones?.[0] || null,
+              email: official.emails?.[0] || null,
+              website: official.urls?.[0] || null,
+              photoUrl: official.photoUrl || null,
+              address: null,
+              jurisdiction: `${data.normalizedInput.city}, ${data.normalizedInput.state}`.toLowerCase(),
+              level,
+              socialLinks,
+              stances: {}, // We'll populate this with additional data or keep empty for Google API data
+              recentBills: []
+            });
+          }
+        }
+      }
+
       // Store the search
       await storage.createAddressSearch({
         address,
-        normalizedAddress: address.toLowerCase().trim(),
-        jurisdiction: "san francisco, ca", // Default for demo
+        normalizedAddress: `${data.normalizedInput.line1}, ${data.normalizedInput.city}, ${data.normalizedInput.state} ${data.normalizedInput.zip}`,
+        jurisdiction: `${data.normalizedInput.city}, ${data.normalizedInput.state}`.toLowerCase(),
       });
 
-      // For demo purposes, we'll use a simple jurisdiction mapping
-      const jurisdiction = address.toLowerCase().includes("san francisco") || address.includes("94") 
-        ? "san francisco, ca" 
-        : "san francisco, ca"; // Default to SF for demo
-
-      const representatives = await storage.getRepresentativesByJurisdiction(jurisdiction);
-      
-      // If no local data, we would call Google Civic Information API here
-      // const civicApiKey = process.env.GOOGLE_CIVIC_API_KEY;
-      // if (civicApiKey && representatives.length === 0) {
-      //   // Call Google Civic Information API
-      // }
-
       res.json({
-        jurisdiction,
+        jurisdiction: `${data.normalizedInput.city}, ${data.normalizedInput.state}`,
         representatives,
-        formattedAddress: address
+        formattedAddress: `${data.normalizedInput.line1}, ${data.normalizedInput.city}, ${data.normalizedInput.state} ${data.normalizedInput.zip}`
       });
     } catch (error) {
       console.error("Error searching representatives:", error);
@@ -62,11 +158,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get elections by jurisdiction
+  // Get elections by jurisdiction using Google Civic Information API
   app.get("/api/elections/:jurisdiction", async (req, res) => {
     try {
       const { jurisdiction } = req.params;
-      const elections = await storage.getElectionsByJurisdiction(decodeURIComponent(jurisdiction));
+      
+      const googleApiKey = process.env.GOOGLE_API_KEY;
+      if (!googleApiKey) {
+        return res.status(500).json({ error: "Google API key not configured" });
+      }
+
+      // Call Google Elections API
+      const googleElectionsUrl = `https://www.googleapis.com/civicinfo/v2/elections?key=${googleApiKey}`;
+      
+      const response = await fetch(googleElectionsUrl);
+      if (!response.ok) {
+        console.error("Google Elections API error:", response.status, response.statusText);
+        return res.status(500).json({ error: "Failed to fetch election data" });
+      }
+
+      const data: GoogleElectionsResponse = await response.json();
+      
+      // Transform Google API data to our format
+      const elections = data.elections.map((election, index) => ({
+        id: index + 1,
+        name: election.name,
+        type: election.name.toLowerCase().includes('general') ? 'general' : 
+              election.name.toLowerCase().includes('primary') ? 'primary' : 'special',
+        jurisdiction: decodeURIComponent(jurisdiction),
+        date: election.electionDay,
+        registrationDeadline: null, // Google API doesn't provide this directly
+        earlyVotingStart: null,
+        earlyVotingEnd: null,
+        electionOfficeUrl: null
+      }));
+
       res.json(elections);
     } catch (error) {
       console.error("Error fetching elections:", error);
