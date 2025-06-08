@@ -13,24 +13,24 @@
   --card-foreground: hsl(20, 14.3%, 4.1%);
   --border: hsl(20, 5.9%, 90%);
   --input: hsl(20, 5.9%, 90%);
-  --primary: hsl(207, 90%, 54%);
-  --primary-foreground: hsl(211, 100%, 99%);
+  --primary: hsl(271, 81%, 56%);
+  --primary-foreground: hsl(271, 100%, 99%);
   --secondary: hsl(60, 4.8%, 95.9%);
   --secondary-foreground: hsl(24, 9.8%, 10%);
-  --accent: hsl(60, 4.8%, 95.9%);
-  --accent-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(271, 15%, 95%);
+  --accent-foreground: hsl(271, 15%, 10%);
   --destructive: hsl(0, 84.2%, 60.2%);
   --destructive-foreground: hsl(60, 9.1%, 97.8%);
-  --ring: hsl(20, 14.3%, 4.1%);
+  --ring: hsl(271, 81%, 56%);
   --radius: 0.5rem;
   
   /* Civic-specific colors */
-  --civic-blue: hsl(210, 85%, 29%);
-  --civic-light: hsl(213, 94%, 68%);
+  --civic-blue: hsl(271, 76%, 38%);
+  --civic-light: hsl(271, 84%, 72%);
   --civic-red: hsl(0, 73%, 41%);
-  --civic-dem: hsl(224, 76%, 48%);
-  --civic-gray: hsl(215, 16%, 47%);
-  --civic-bg: hsl(210, 40%, 98%);
+  --civic-dem: hsl(271, 81%, 56%);
+  --civic-gray: hsl(271, 16%, 47%);
+  --civic-bg: hsl(271, 40%, 98%);
 }
 
 .dark {
@@ -44,24 +44,24 @@
   --card-foreground: hsl(0, 0%, 98%);
   --border: hsl(240, 3.7%, 15.9%);
   --input: hsl(240, 3.7%, 15.9%);
-  --primary: hsl(207, 90%, 54%);
-  --primary-foreground: hsl(211, 100%, 99%);
+  --primary: hsl(271, 81%, 56%);
+  --primary-foreground: hsl(271, 100%, 99%);
   --secondary: hsl(240, 3.7%, 15.9%);
   --secondary-foreground: hsl(0, 0%, 98%);
-  --accent: hsl(240, 3.7%, 15.9%);
-  --accent-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(271, 15%, 20%);
+  --accent-foreground: hsl(271, 15%, 90%);
   --destructive: hsl(0, 62.8%, 30.6%);
   --destructive-foreground: hsl(0, 0%, 98%);
-  --ring: hsl(240, 4.9%, 83.9%);
+  --ring: hsl(271, 81%, 56%);
   --radius: 0.5rem;
   
   /* Dark mode civic colors */
-  --civic-blue: hsl(210, 85%, 35%);
-  --civic-light: hsl(213, 94%, 75%);
+  --civic-blue: hsl(271, 76%, 45%);
+  --civic-light: hsl(271, 84%, 80%);
   --civic-red: hsl(0, 73%, 50%);
-  --civic-dem: hsl(224, 76%, 60%);
-  --civic-gray: hsl(215, 16%, 60%);
-  --civic-bg: hsl(210, 40%, 10%);
+  --civic-dem: hsl(271, 81%, 65%);
+  --civic-gray: hsl(271, 16%, 60%);
+  --civic-bg: hsl(271, 40%, 10%);
 }
 
 @layer base {
