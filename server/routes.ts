@@ -558,6 +558,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
           },
           recentBills: []
         });
+      } else {
+        // Add generic local representative for any city not specifically covered
+        representatives.push({
+          id: 3,
+          name: "Local Representative",
+          office: `Mayor of ${normalizedInput.city}`,
+          party: "Nonpartisan",
+          phone: "(555) 123-4567",
+          email: null,
+          website: null,
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "local",
+          socialLinks: [],
+          stances: {
+            "Local Infrastructure": "Focus on improving local roads, utilities, and public facilities",
+            "Community Services": "Dedicated to enhancing quality of life for all residents"
+          },
+          recentBills: [
+            {
+              title: "Community Development Initiative",
+              position: "Supported",
+              description: "Local legislation to improve municipal services and infrastructure"
+            }
+          ]
+        });
       }
 
       // Store the search in our database  

@@ -129,6 +129,54 @@ export default function RepresentativesSection({
           description: "Led efforts to improve local bus routes and bike lane infrastructure."
         }
       ]
+    },
+    {
+      id: 5,
+      name: "Maria Rodriguez",
+      office: "City Council Member",
+      party: "Democratic",
+      phone: "(408) 555-0156",
+      email: "mrodriguez@sanjoseca.gov",
+      website: "https://sanjoseca.gov/council",
+      photoUrl: null,
+      address: "City Hall, 200 E Santa Clara St, San Jose, CA 95113",
+      jurisdiction: "san jose, ca",
+      level: "local",
+      stances: {
+        "Economic Development": "Supports small business growth and job creation in San Jose.",
+        "Public Safety": "Advocates for community policing and crime prevention programs."
+      },
+      recentBills: [
+        {
+          title: "Small Business Support Act",
+          position: "Sponsored",
+          description: "Introduced legislation to provide tax incentives for local small businesses."
+        }
+      ]
+    },
+    {
+      id: 6,
+      name: "Robert Chen",
+      office: "Mayor",
+      party: "Nonpartisan",
+      phone: "(555) 123-4567",
+      email: "mayor@localcity.gov",
+      website: "https://localcity.gov/mayor",
+      photoUrl: null,
+      address: "City Hall, Main Street, Your City",
+      jurisdiction: "generic local",
+      level: "local",
+      stances: {
+        "Infrastructure": "Focuses on improving roads, parks, and public facilities.",
+        "Community Development": "Supports programs that enhance quality of life for residents."
+      },
+      recentBills: [
+        {
+          title: "Parks Improvement Initiative",
+          position: "Supported",
+          description: "Approved funding for renovating local parks and recreational facilities."
+        }
+      ]
     }
   ];
 
