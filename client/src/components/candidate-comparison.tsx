@@ -279,20 +279,39 @@ export default function CandidateComparison() {
                   </div>
                 </div>
 
-                {/* Issue Positions */}
-                <div className="mb-6">
-                  <div className="bg-purple-50 border-l-4 border-purple-400 p-4 rounded-r-lg">
-                    <h6 className="font-semibold text-purple-900 mb-4">Policy Positions</h6>
-                    <div className="space-y-3">
-                      {Object.entries(candidate.positions || {}).map(([issue, position]) => (
-                        <div key={issue} className="bg-white/60 rounded-lg p-3 border border-purple-200">
-                          <h6 className="font-medium text-purple-900 text-sm mb-2">{issue}</h6>
-                          <p className="text-xs text-purple-800 leading-relaxed">{position as string}</p>
-                        </div>
-                      ))}
+                {/* Policy Positions */}
+                {candidate.positions && Object.keys(candidate.positions).length > 0 && (
+                  <div className="mb-6">
+                    <div className="bg-purple-50 border-l-4 border-purple-400 p-4 rounded-r-lg">
+                      <h6 className="font-semibold text-purple-900 mb-4">Policy Positions</h6>
+                      <div className="space-y-3">
+                        {Object.entries(candidate.positions).map(([issue, position]) => (
+                          <div key={issue} className="bg-white/60 rounded-lg p-3 border border-purple-200">
+                            <h6 className="font-medium text-purple-900 text-sm mb-2">{issue}</h6>
+                            <p className="text-xs text-purple-800 leading-relaxed">{position as string}</p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {/* Stances */}
+                {candidate.stances && Object.keys(candidate.stances).length > 0 && (
+                  <div className="mb-6">
+                    <div className="bg-indigo-50 border-l-4 border-indigo-400 p-4 rounded-r-lg">
+                      <h6 className="font-semibold text-indigo-900 mb-4">Stances</h6>
+                      <div className="space-y-3">
+                        {Object.entries(candidate.stances).map(([issue, stance]) => (
+                          <div key={issue} className="bg-white/60 rounded-lg p-3 border border-indigo-200">
+                            <h6 className="font-medium text-indigo-900 text-sm mb-2">{issue}</h6>
+                            <p className="text-xs text-indigo-800 leading-relaxed">{stance as string}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Recent Actions */}
                 <div className="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r-lg">

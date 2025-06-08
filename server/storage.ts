@@ -130,7 +130,9 @@ export class MemStorage implements IStorage {
           "Public Safety & Neighborhoods": "Fully staff police department, expand alternative response programs, invest in youth services, use technology for road safety, empower neighborhoods",
           "Downtown & Economic Vitality": "Streamline downtown housing, support new businesses, improve walkability, enforce codes against blight, support arts organizations",
           "Sustainability & Transit": "Support improved public transit and BART delivery, promote transit-oriented development, expand bike lanes, require sustainable building practices",
-          "Transparent & Accountable City Hall": "Advocate for publicly financed elections, end revolving door with lobbyists, reform community outreach, restore remote participation",
+          "Transparent & Accountable City Hall": "Advocate for publicly financed elections, end revolving door with lobbyists, reform community outreach, restore remote participation"
+        },
+        stances: {
           "Abortion": "In favor",
           "LGBTQ+": "In favor", 
           "Climate Change": "Advocates sustainable urban development, promotes housing density near transit, supports bike infrastructure and walkable neighborhoods",
@@ -158,7 +160,9 @@ export class MemStorage implements IStorage {
           "Address Homelessness": "Invest in transitional housing with mental health support, promote balanced housing mix, streamline permitting, protect residents from displacement",
           "Support Small Businesses": "Simplify permitting and reduce fees, offer tax incentives and grants, partner with institutions for workforce training",
           "Community Spaces and Cultural Engagement": "Develop parks and cultural centers, encourage arts and festivals, promote balanced development for revenue generation",
-          "Sustainable and Innovative Transportation": "Improve bus and light rail reliability, expand bike lanes and EV charging, explore smart transportation solutions",
+          "Sustainable and Innovative Transportation": "Improve bus and light rail reliability, expand bike lanes and EV charging, explore smart transportation solutions"
+        },
+        stances: {
           "Abortion": "In favor",
           "LGBTQ+": "In favor",
           "Climate Change": "Supports small business growth, streamlined housing development, and sustainable infrastructure investment",
