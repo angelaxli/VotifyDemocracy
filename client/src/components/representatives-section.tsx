@@ -105,6 +105,30 @@ export default function RepresentativesSection({
       level: "local",
       stances: {},
       recentBills: []
+    },
+    {
+      id: 4,
+      name: "John Smith",
+      office: "City Council Member",
+      party: "Independent",
+      phone: "(415) 555-0123",
+      email: "jsmith@citycouncil.gov",
+      website: "https://citycouncil.gov/smith",
+      photoUrl: null,
+      address: "City Hall, 1 Dr Carlton B Goodlett Pl, San Francisco, CA 94102",
+      jurisdiction: "san francisco, ca",
+      level: "local",
+      stances: {
+        "Public Transportation": "Advocates for expanded public transit options and reduced traffic congestion.",
+        "Housing": "Supports affordable housing initiatives and zoning reform."
+      },
+      recentBills: [
+        {
+          title: "Transit Improvement Initiative",
+          position: "Sponsored",
+          description: "Led efforts to improve local bus routes and bike lane infrastructure."
+        }
+      ]
     }
   ];
 
