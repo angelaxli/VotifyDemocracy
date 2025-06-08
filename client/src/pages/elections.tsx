@@ -96,35 +96,30 @@ export default function Elections() {
           </div>
         )}
 
-        {/* Voting Information for Your Address Section */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-2">
-            <MapPin className="h-6 w-6 text-civic-blue" />
-            Voting Information for Your Address
-          </h2>
-          
-          <div className="space-y-6">
-            {/* Polling Location */}
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-civic-blue" />
-                Where do I vote?
-              </h3>
-              <h4 className="font-semibold">Joyce Ellington Branch Library</h4>
-              <p className="text-gray-600">
-                Address: 491 E Empire St, San Jose, CA 95112
-              </p>
-            </div>
-
-            {/* Additional voting information */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="p-4 border rounded-lg">
+        {/* Voting Information Section - moved to top */}
+        {searchResults && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Voting Information for Your Area</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div>
+                <h3 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-civic-blue" />
+                  Where do I vote?
+                </h3>
+                <p className="text-sm text-gray-600 mb-2">
+                  Joyce Ellington Branch Library
+                </p>
+                <p className="text-sm text-gray-600">
+                  Address: 491 E Empire St, San Jose, CA 95112
+                </p>
+              </div>
+              <div>
                 <h3 className="font-medium text-gray-900 mb-2">Register to Vote</h3>
                 <p className="text-sm text-gray-600">
                   Make sure you're registered to vote in your state. Registration deadlines vary by location.
                 </p>
               </div>
-              <div className="p-4 border rounded-lg">
+              <div>
                 <h3 className="font-medium text-gray-900 mb-2">Early Voting</h3>
                 <p className="text-sm text-gray-600">
                   Many jurisdictions offer early voting options. Check if early voting is available in your area.
@@ -132,7 +127,7 @@ export default function Elections() {
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {elections && elections.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -188,30 +183,6 @@ export default function Elections() {
           </div>
         )}
 
-        {/* Voting Information for Your Area Section - moved to bottom */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Voting Information for Your Area</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div>
-              <h3 className="font-medium text-gray-900 mb-2">Register to Vote</h3>
-              <p className="text-sm text-gray-600">
-                Make sure you're registered to vote in your state. Registration deadlines vary by location.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-900 mb-2">Voter ID</h3>
-              <p className="text-sm text-gray-600">
-                Check your state's voter ID requirements before heading to the polls.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium text-gray-900 mb-2">Absentee Voting</h3>
-              <p className="text-sm text-gray-600">
-                Request an absentee ballot if you cannot vote in person on election day.
-              </p>
-            </div>
-          </div>
-        </div>
         
       </div>
       
