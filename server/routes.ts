@@ -316,20 +316,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
           office: "Governor of California",
           party: "Democratic Party", 
           phone: "(916) 445-2841",
-          email: null,
-          website: "https://www.gov.ca.gov/",
-          photoUrl: null,
-          address: null,
+          email: "gavin.newsom@gov.ca.gov",
+          website: "https://gov.ca.gov",
+          photoUrl: "/attached_assets/Screenshot 2025-06-08 at 4.20.39 PM_1749424854143.png",
+          address: "1303 10th Street, Suite 1173, Sacramento, CA 95814",
           jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
           level: "state",
           socialLinks: [
-            { type: "twitter", url: "https://twitter.com/GavinNewsom" }
+            { type: "Instagram", url: "https://instagram.com/gavinnewsom" },
+            { type: "Twitter", url: "https://twitter.com/gavinnewsom" }
           ],
           stances: {
-            "Climate Change": "Leader in state climate action and renewable energy",
-            "Healthcare": "Supports single-payer healthcare system"
+            "Abortion": "Strong advocate for women's rights, supporting abortion access and helping establish California as an abortion sanctuary in 2022. Key legislation including AB 1666, 1242, 2091, 2134, 1918, 2626, as well as SB 245, 345, and 1375 was passed to protect abortion rights. Launched abortion.ca.gov for comprehensive information.",
+            "LGBTQ+": "Strong advocate for the LGBTQ+ community, declaring California the first sanctuary state for transgender youth in 2022. Legislation including AB 439, 378, 1084, 1955, 5, 223, 760, 857, 1825, 2442, and SB 729, 1067, 447 was passed to support transgender rights and equality.",
+            "Gun Policy": "Strong supporter of gun control measures, focusing on expanding background checks, banning assault weapons, and raising minimum gun purchase age to 21. Key legislation includes Proposition 63, AB 339, 1057, 12, 61, 164, 521, 1621, 2571, 960, as well as SB 2, 452, 1327.",
+            "Climate Change": "Supports California's fight against climate change with policies for carbon neutrality by 2045. Banned new gas-powered car sales by 2035, boosting electric vehicle infrastructure, expanding renewable energy, and holding companies accountable for emissions.",
+            "Homelessness": "Considers homelessness a top priority, combining increased funding, executive orders, and new laws. Directed state agencies to clear homeless encampments while connecting individuals to housing and services. Launched Prop 1 Homekey program in 2024. Announced $920 million in new homelessness funding in 2025.",
+            "Immigration": "Supports refugees and positioned California as a safe haven, emphasizing protections for undocumented communities. Consistently opposes federal immigration enforcement actions."
           },
-          recentBills: []
+          recentBills: [
+            {
+              title: "Prop 1 Homekey Program",
+              position: "Launched",
+              description: "Launched comprehensive homelessness program in 2024 combining housing services and support programs."
+            },
+            {
+              title: "California Abortion Sanctuary Legislation",
+              position: "Signed",
+              description: "Established California as abortion sanctuary state in 2022 with comprehensive protection laws."
+            },
+            {
+              title: "Transgender Youth Sanctuary State",
+              position: "Signed", 
+              description: "Declared California first sanctuary state for transgender youth in 2022 with protective legislation."
+            }
+          ]
         });
 
         // Add State Senator for California
