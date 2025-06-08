@@ -88,17 +88,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
               zip: civicData.normalizedInput.zip || "00000"
             };
           }
+        } else {
+          throw new Error(`Civic API error: ${civicResponse.status}`);
         }
       } catch (error) {
         console.error("Error normalizing address with Google Civic API:", error);
-        // Fall back to basic parsing
+        // Fall back to intelligent parsing of the user's address
         const parts = address.split(',').map((part: string) => part.trim());
-        normalizedInput = {
-          line1: parts[0] || address,
-          city: parts[1] || "Unknown",
-          state: parts[2] || "Unknown",
-          zip: parts[3] || "00000"
-        };
+        if (parts.length >= 3) {
+          // Extract state from common formats like "CA" or "California"
+          let state = parts[parts.length - 2] || "Unknown";
+          let zip = "00000";
+          
+          // Check if last part contains zip code
+          const lastPart = parts[parts.length - 1];
+          const zipMatch = lastPart.match(/\b\d{5}(-\d{4})?\b/);
+          if (zipMatch) {
+            zip = zipMatch[0];
+            // Remove zip from state if it was included
+            state = lastPart.replace(zipMatch[0], '').trim() || state;
+          }
+          
+          normalizedInput = {
+            line1: parts[0] || address,
+            city: parts[1] || "Unknown", 
+            state: state,
+            zip: zip
+          };
+        } else {
+          // Basic fallback
+          normalizedInput = {
+            line1: parts[0] || address,
+            city: parts[1] || "Unknown",
+            state: parts[2] || "Unknown", 
+            zip: "00000"
+          };
+        }
       }
 
       // Static representative data organized by government level

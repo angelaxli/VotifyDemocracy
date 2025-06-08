@@ -1,10 +1,18 @@
 import { useState } from "react";
-import { Phone, Mail, User } from "lucide-react";
+import { Phone, Mail, User, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useQuery } from "@tanstack/react-query";
 
 export default function CandidateComparison() {
-  const [activeRace, setActiveRace] = useState<"local" | "national">("local");
+  const [selectedElection, setSelectedElection] = useState<string>("");
+
+  // Fetch upcoming elections from Google Civic Information API
+  const { data: elections, isLoading: electionsLoading } = useQuery({
+    queryKey: ["/api/elections"],
+    queryFn: () => fetch("/api/elections").then(res => res.json())
+  });
 
   // Sample candidates data
   const localCandidates = [
@@ -111,8 +119,28 @@ export default function CandidateComparison() {
     }
   ];
 
-  const candidates = activeRace === "local" ? localCandidates : nationalCandidates;
-  const raceTitle = activeRace === "local" ? "San Francisco Mayor Race 2024" : "2024 U.S. Senate Race - California";
+  // Get candidates based on selected election
+  const getSelectedElectionData = () => {
+    if (!selectedElection || !elections) {
+      return { candidates: [], title: "Select an election to view candidates" };
+    }
+    
+    const election = elections.find((e: any) => e.id.toString() === selectedElection);
+    if (!election) {
+      return { candidates: [], title: "Election not found" };
+    }
+
+    // Determine candidates based on election type/jurisdiction
+    if (election.jurisdiction.includes('state:ca') && election.name.toLowerCase().includes('senate')) {
+      return { candidates: nationalCandidates, title: election.name };
+    } else if (election.jurisdiction.includes('san') || election.name.toLowerCase().includes('mayor')) {
+      return { candidates: localCandidates, title: election.name };
+    } else {
+      return { candidates: [], title: `${election.name} - Candidate information not available` };
+    }
+  };
+
+  const { candidates, title: raceTitle } = getSelectedElectionData();
 
   const getPartyColor = (party: string) => {
     switch (party?.toLowerCase()) {
@@ -147,31 +175,27 @@ export default function CandidateComparison() {
           <p className="text-lg text-gray-600">See how candidates stack up on the issues that matter to you</p>
         </div>
 
-        {/* Race Selection */}
+        {/* Election Selection */}
         <div className="flex justify-center mb-8">
-          <div className="bg-gray-100 rounded-lg p-1 flex">
-            <Button
-              variant={activeRace === "local" ? "default" : "ghost"}
-              className={`px-4 py-2 rounded-md font-medium ${
-                activeRace === "local" 
-                  ? "bg-white text-civic-blue shadow-sm" 
-                  : "text-gray-600 hover:text-civic-blue"
-              }`}
-              onClick={() => setActiveRace("local")}
-            >
-              Local Race
-            </Button>
-            <Button
-              variant={activeRace === "national" ? "default" : "ghost"}
-              className={`px-4 py-2 rounded-md font-medium ${
-                activeRace === "national" 
-                  ? "bg-white text-civic-blue shadow-sm" 
-                  : "text-gray-600 hover:text-civic-blue"
-              }`}
-              onClick={() => setActiveRace("national")}
-            >
-              National Race
-            </Button>
+          <div className="w-full max-w-md">
+            <Select value={selectedElection} onValueChange={setSelectedElection}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select an upcoming election" />
+              </SelectTrigger>
+              <SelectContent>
+                {electionsLoading ? (
+                  <SelectItem value="loading" disabled>Loading elections...</SelectItem>
+                ) : elections && elections.length > 0 ? (
+                  elections.map((election: any) => (
+                    <SelectItem key={election.id} value={election.id.toString()}>
+                      {election.name} - {new Date(election.date).toLocaleDateString()}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="none" disabled>No elections available</SelectItem>
+                )}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -226,7 +250,7 @@ export default function CandidateComparison() {
                 {/* Recent Actions */}
                 <div className="mt-6 pt-4 border-t border-gray-200">
                   <h6 className="font-semibold text-gray-800 mb-3">
-                    {activeRace === "local" ? "Recent Actions:" : "Platform Highlights:"}
+                    Recent Actions:
                   </h6>
                   <div className="space-y-2">
                     {candidate.recentActions.map((action, index) => (
