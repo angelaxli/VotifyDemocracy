@@ -1,9 +1,11 @@
 import { apiRequest } from "./queryClient";
 
 export interface RepresentativeSearchResponse {
-  jurisdiction: string;
-  representatives: any[];
+  federal: any[];
+  state: any[];
+  local: any[];
   formattedAddress: string;
+  jurisdiction: string;
 }
 
 export const searchRepresentatives = async (address: string): Promise<RepresentativeSearchResponse> => {
