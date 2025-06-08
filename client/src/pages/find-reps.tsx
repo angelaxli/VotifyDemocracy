@@ -14,6 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Representative } from "@shared/schema";
+import LocationMap from "@/components/location-map";
 
 interface RepresentativeWithStances extends Representative {
   socialLinks: Array<{ type: string; url: string }> | null;
@@ -118,13 +119,12 @@ export default function FindReps() {
 
             {/* Interactive Map */}
             <div className="mt-6">
-              <h3 className="text-lg font-semibold text-black mb-3">Your District Map</h3>
-              <div className="bg-gray-100 rounded-lg h-64 flex items-center justify-center border-2 border-dashed border-gray-300">
-                <div className="text-center text-gray-500">
-                  <MapPin className="h-12 w-12 mx-auto mb-2" />
-                  <p className="text-sm">Interactive district map will appear here</p>
-                  <p className="text-xs mt-1">Enter an address above to see your electoral districts</p>
-                </div>
+              <h3 className="text-lg font-semibold text-black mb-3">Your Location</h3>
+              <div className="rounded-lg h-64 overflow-hidden">
+                <LocationMap 
+                  address={searchResults?.formattedAddress || address} 
+                  className="h-full w-full"
+                />
               </div>
             </div>
           </div>

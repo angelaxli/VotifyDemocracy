@@ -383,6 +383,93 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all upcoming elections (without jurisdiction filter)
+  app.get("/api/elections", async (req, res) => {
+    try {
+      const googleApiKey = process.env.GOOGLE_CIVIC_API_KEY;
+      if (!googleApiKey) {
+        return res.status(500).json({ error: "Google Civic API key not configured" });
+      }
+
+      const electionsUrl = `https://civicinfo.googleapis.com/civicinfo/v2/elections?key=${googleApiKey}`;
+      
+      const response = await fetch(electionsUrl);
+      if (!response.ok) {
+        throw new Error(`Elections API error: ${response.status}`);
+      }
+      
+      const data: GoogleElectionsResponse = await response.json();
+      
+      const elections = data.elections.map((election, index) => ({
+        id: parseInt(election.id),
+        name: election.name,
+        date: election.electionDay,
+        jurisdiction: election.ocdDivisionId || "Unknown",
+        type: election.name.toLowerCase().includes('primary') ? 'primary' : 
+              election.name.toLowerCase().includes('general') ? 'general' : 'special',
+        registrationDeadline: null,
+        earlyVotingStart: null,
+        earlyVotingEnd: null,
+        electionOfficeUrl: null
+      }));
+
+      res.json(elections);
+    } catch (error) {
+      console.error("Error fetching elections:", error);
+      res.status(500).json({ error: "Failed to fetch elections" });
+    }
+  });
+
+  // Get voter information for address and election
+  app.post("/api/voterinfo", async (req, res) => {
+    try {
+      const { address, electionId } = req.body;
+      
+      if (!address) {
+        return res.status(400).json({ error: "Address is required" });
+      }
+
+      const googleApiKey = process.env.GOOGLE_CIVIC_API_KEY;
+      if (!googleApiKey) {
+        return res.status(500).json({ error: "Google Civic API key not configured" });
+      }
+
+      const encodedAddress = encodeURIComponent(address);
+      let voterInfoUrl = `https://www.googleapis.com/civicinfo/v2/voterinfo?key=${googleApiKey}&address=${encodedAddress}`;
+      
+      if (electionId) {
+        voterInfoUrl += `&electionId=${electionId}`;
+      }
+
+      const response = await fetch(voterInfoUrl);
+      if (!response.ok) {
+        const errorText = await response.text();
+        return res.status(response.status).json({ 
+          error: "Voter information not available",
+          details: errorText
+        });
+      }
+
+      const data = await response.json();
+      
+      const voterInfo = {
+        election: data.election || null,
+        normalizedAddress: data.normalizedInput || null,
+        pollingLocations: data.pollingLocations || [],
+        earlyVoteSites: data.earlyVoteSites || [],
+        dropOffLocations: data.dropOffLocations || [],
+        contests: data.contests || [],
+        state: data.state || [],
+        electionAdministration: data.state?.[0]?.electionAdministrationBody || null
+      };
+
+      res.json(voterInfo);
+    } catch (error) {
+      console.error("Error fetching voter info:", error);
+      res.status(500).json({ error: "Failed to fetch voter information" });
+    }
+  });
+
   // Get recent address searches
   app.get("/api/searches/recent", async (req, res) => {
     try {

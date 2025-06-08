@@ -28,3 +28,13 @@ export const getRecentSearches = async () => {
   const response = await apiRequest("GET", "/api/searches/recent");
   return await response.json();
 };
+
+export const getElections = async () => {
+  const response = await apiRequest("GET", "/api/elections");
+  return await response.json();
+};
+
+export const getVoterInfo = async (address: string, electionId?: string) => {
+  const response = await apiRequest("POST", "/api/voterinfo", { address, electionId });
+  return await response.json();
+};
