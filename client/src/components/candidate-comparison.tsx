@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 
+
 export default function CandidateComparison() {
   const [selectedElection, setSelectedElection] = useState<string>("");
 
