@@ -1,32 +1,147 @@
 import Header from "@/components/header";
-import ElectionsSection from "@/components/elections-section";
 import Footer from "@/components/footer";
-import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { getElections } from "@/lib/api";
+import { Calendar, MapPin, Clock, ExternalLink } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export default function Elections() {
-  const [jurisdiction, setJurisdiction] = useState<string>("");
-  const [location] = useLocation();
+  const { data: elections, isLoading, error } = useQuery({
+    queryKey: ["/api/elections"],
+    queryFn: () => getElections()
+  });
 
-  useEffect(() => {
-    // Get jurisdiction from URL params
-    const urlParams = new URLSearchParams(window.location.search);
-    const jurisdictionParam = urlParams.get('jurisdiction');
-    
-    if (jurisdictionParam) {
-      setJurisdiction(jurisdictionParam);
-    } else {
-      // Default to San Francisco for demo
-      setJurisdiction("san francisco, ca");
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
+  const getElectionTypeColor = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'primary': return 'bg-blue-100 text-blue-800';
+      case 'general': return 'bg-green-100 text-green-800';
+      case 'special': return 'bg-orange-100 text-orange-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
-  }, [location]);
+  };
+
+  const formatJurisdiction = (jurisdiction: string) => {
+    if (jurisdiction.startsWith('ocd-division/country:us/state:')) {
+      const state = jurisdiction.replace('ocd-division/country:us/state:', '').toUpperCase();
+      return state;
+    }
+    return jurisdiction;
+  };
 
   return (
     <div className="min-h-screen bg-civic-bg">
       <Header />
-      <div className="pt-8">
-        <ElectionsSection jurisdiction={jurisdiction} />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Upcoming Elections</h1>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+            Stay informed about upcoming elections in your area. Find election dates, types, and jurisdictions 
+            to make sure you're prepared to vote.
+          </p>
+        </div>
+
+        {isLoading && (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-civic-blue mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading election information...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-red-600">Failed to load election data. Please try again later.</p>
+          </div>
+        )}
+
+        {elections && elections.length > 0 && (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {elections.map((election: any) => (
+              <Card key={election.id} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <CardTitle className="text-lg font-semibold text-gray-900 mb-2">
+                        {election.name}
+                      </CardTitle>
+                      <Badge className={getElectionTypeColor(election.type)}>
+                        {election.type.charAt(0).toUpperCase() + election.type.slice(1)} Election
+                      </Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="space-y-4">
+                  <div className="flex items-center text-gray-600">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    <span className="font-medium">{formatDate(election.date)}</span>
+                  </div>
+                  
+                  <div className="flex items-center text-gray-600">
+                    <MapPin className="h-4 w-4 mr-2" />
+                    <span>{formatJurisdiction(election.jurisdiction)}</span>
+                  </div>
+                  
+                  <div className="pt-4 border-t border-gray-100">
+                    <p className="text-sm text-gray-500 mb-3">
+                      Make sure you're registered to vote and know your polling location.
+                    </p>
+                    
+                    <div className="flex items-center text-civic-blue text-sm font-medium hover:text-civic-blue-dark cursor-pointer">
+                      <ExternalLink className="h-4 w-4 mr-1" />
+                      Find polling location
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {elections && elections.length === 0 && (
+          <div className="text-center py-12">
+            <Calendar className="h-24 w-24 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No Upcoming Elections</h3>
+            <p className="text-gray-600">There are no elections currently scheduled in the system.</p>
+          </div>
+        )}
+
+        <div className="mt-12 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Election Information</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div>
+              <h3 className="font-medium text-gray-900 mb-2">Register to Vote</h3>
+              <p className="text-sm text-gray-600">
+                Make sure you're registered to vote in your state. Registration deadlines vary by location.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-medium text-gray-900 mb-2">Find Your Polling Place</h3>
+              <p className="text-sm text-gray-600">
+                Locate your designated polling location and check voting hours for election day.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-medium text-gray-900 mb-2">Early Voting</h3>
+              <p className="text-sm text-gray-600">
+                Many jurisdictions offer early voting options. Check if early voting is available in your area.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
+      
       <Footer />
     </div>
   );

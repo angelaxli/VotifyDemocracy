@@ -138,6 +138,144 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ]
       });
 
+      // Add US Senators based on state
+      if (normalizedInput.state === "CA") {
+        representatives.push({
+          id: 4,
+          name: "Dianne Feinstein",
+          office: "U.S. Senator from California",
+          party: "Democratic Party",
+          phone: "(202) 224-3841",
+          email: null,
+          website: "https://www.feinstein.senate.gov/",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "federal",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/SenFeinstein" }
+          ],
+          stances: {
+            "Gun Control": "Strong advocate for assault weapons ban",
+            "Environment": "Leader on climate change legislation"
+          },
+          recentBills: []
+        });
+        
+        representatives.push({
+          id: 5,
+          name: "Alex Padilla",
+          office: "U.S. Senator from California",
+          party: "Democratic Party", 
+          phone: "(202) 224-3553",
+          email: null,
+          website: "https://www.padilla.senate.gov/",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "federal",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/SenAlexPadilla" }
+          ],
+          stances: {
+            "Immigration": "Comprehensive immigration reform advocate",
+            "Climate": "Clean energy and environmental justice"
+          },
+          recentBills: []
+        });
+      } else if (normalizedInput.state === "TX") {
+        representatives.push({
+          id: 4,
+          name: "John Cornyn",
+          office: "U.S. Senator from Texas",
+          party: "Republican Party",
+          phone: "(202) 224-2934",
+          email: null,
+          website: "https://www.cornyn.senate.gov/",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "federal",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/JohnCornyn" }
+          ],
+          stances: {
+            "Border Security": "Strong border security advocate",
+            "Economy": "Pro-business and tax reform"
+          },
+          recentBills: []
+        });
+        
+        representatives.push({
+          id: 5,
+          name: "Ted Cruz",
+          office: "U.S. Senator from Texas",
+          party: "Republican Party",
+          phone: "(202) 224-5922",
+          email: null,
+          website: "https://www.cruz.senate.gov/",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "federal",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/SenTedCruz" }
+          ],
+          stances: {
+            "Constitutional Rights": "Strong constitutional conservative",
+            "Energy": "Supports energy independence"
+          },
+          recentBills: []
+        });
+      }
+
+      // Add US Representatives based on location
+      if (normalizedInput.city === "San Francisco") {
+        representatives.push({
+          id: 6,
+          name: "Nancy Pelosi",
+          office: "U.S. Representative, CA-11",
+          party: "Democratic Party",
+          phone: "(202) 225-4965",
+          email: null,
+          website: "https://pelosi.house.gov/",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "federal",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/SpeakerPelosi" }
+          ],
+          stances: {
+            "Healthcare": "Affordable Care Act champion",
+            "Economic Justice": "Focus on income inequality"
+          },
+          recentBills: []
+        });
+      } else if (normalizedInput.city === "Austin") {
+        representatives.push({
+          id: 6,
+          name: "Lloyd Doggett",
+          office: "U.S. Representative, TX-37",
+          party: "Democratic Party",
+          phone: "(202) 225-4865",
+          email: null,
+          website: "https://doggett.house.gov/",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "federal",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/RepLloydDoggett" }
+          ],
+          stances: {
+            "Healthcare": "Medicare for All supporter",
+            "Education": "Strong public education advocate"
+          },
+          recentBills: []
+        });
+      }
+
       // State representatives based on location
       if (normalizedInput.state === "CA") {
         representatives.push({
@@ -161,6 +299,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
           },
           recentBills: []
         });
+
+        // Add State Senator for California
+        representatives.push({
+          id: 7,
+          name: "Scott Wiener",
+          office: "California State Senator, District 11",
+          party: "Democratic Party",
+          phone: "(415) 557-1300",
+          email: null,
+          website: "https://sd11.senate.ca.gov/",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "state",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/Scott_Wiener" }
+          ],
+          stances: {
+            "Housing": "YIMBY advocate for housing production",
+            "Transportation": "Public transit and climate action"
+          },
+          recentBills: []
+        });
+
+        // Add Assembly Member for California
+        representatives.push({
+          id: 8,
+          name: "Matt Haney",
+          office: "California Assembly Member, District 17",
+          party: "Democratic Party",
+          phone: "(415) 557-2312",
+          email: null,
+          website: "https://a17.asmdc.org/",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "state",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/MattHaneySF" }
+          ],
+          stances: {
+            "Mental Health": "Expanding mental health services",
+            "Housing": "Affordable housing advocate"
+          },
+          recentBills: []
+        });
       } else if (normalizedInput.state === "TX") {
         representatives.push({
           id: 2,
@@ -180,6 +364,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
           stances: {
             "Economy": "Pro-business policies and job creation",
             "Border Security": "Strong advocate for border security measures"
+          },
+          recentBills: []
+        });
+
+        // Add State Senator for Texas
+        representatives.push({
+          id: 7,
+          name: "Sarah Eckhardt",
+          office: "Texas State Senator, District 14",
+          party: "Democratic Party",
+          phone: "(512) 463-0114",
+          email: null,
+          website: "https://senate.texas.gov/member.php?d=14",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "state",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/SarahForTexas" }
+          ],
+          stances: {
+            "Healthcare": "Expanding Medicaid and healthcare access",
+            "Education": "Increasing public school funding"
+          },
+          recentBills: []
+        });
+
+        // Add State Representative for Texas
+        representatives.push({
+          id: 8,
+          name: "Gina Hinojosa",
+          office: "Texas State Representative, District 49",
+          party: "Democratic Party",
+          phone: "(512) 463-0668",
+          email: null,
+          website: "https://house.texas.gov/members/member-page/?district=49",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "state",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/GinaForAustin" }
+          ],
+          stances: {
+            "Public Education": "Strong advocate for public schools",
+            "Women's Rights": "Reproductive rights champion"
           },
           recentBills: []
         });

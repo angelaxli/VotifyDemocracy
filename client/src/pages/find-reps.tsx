@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, MapPin, Phone, Mail, Globe, ExternalLink, Users, Building, Flag } from "lucide-react";
+import { Search, MapPin, Phone, Mail, Globe, ExternalLink, Users, Building, Flag, Vote, Calendar, Clock } from "lucide-react";
 import { FaTwitter, FaFacebook, FaYoutube, FaInstagram } from "react-icons/fa";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -32,7 +32,9 @@ export default function FindReps() {
     jurisdiction: string;
   } | null>(null);
   const [selectedRep, setSelectedRep] = useState<RepresentativeWithStances | null>(null);
+  const [voterInfo, setVoterInfo] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingVoterInfo, setIsLoadingVoterInfo] = useState(false);
   const { toast } = useToast();
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -53,6 +55,9 @@ export default function FindReps() {
       
       // Data now comes pre-structured with federal, state, and local categories
       setSearchResults(data);
+      
+      // Also fetch voter information for this address
+      await fetchVoterInfo(address);
       
       const totalReps = data.federal.length + data.state.length + data.local.length;
       toast({
