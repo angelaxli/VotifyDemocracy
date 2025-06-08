@@ -76,6 +76,20 @@ export default function FindReps() {
     }
   };
 
+  const fetchVoterInfo = async (searchAddress: string) => {
+    setIsLoadingVoterInfo(true);
+    try {
+      const response = await apiRequest("POST", "/api/voterinfo", { address: searchAddress });
+      const data = await response.json();
+      setVoterInfo(data);
+    } catch (error) {
+      console.error("Voter info error:", error);
+      // Don't show error toast for voter info as it's supplementary
+    } finally {
+      setIsLoadingVoterInfo(false);
+    }
+  };
+
   const getSocialIcon = (type: string) => {
     switch (type.toLowerCase()) {
       case 'twitter': return <FaTwitter className="h-4 w-4" />;
@@ -164,6 +178,266 @@ export default function FindReps() {
                 <RepresentativeGrid representatives={localReps} onSelect={setSelectedRep} />
               </TabsContent>
             </Tabs>
+          )}
+
+          {/* Voter Information Section */}
+          {searchResults && (
+            <div className="bg-white rounded-xl shadow-lg p-6 mt-8">
+              <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-2">
+                <Vote className="h-6 w-6 text-civic-blue" />
+                Voting Information for Your Address
+              </h2>
+              
+              {isLoadingVoterInfo ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-civic-blue mx-auto"></div>
+                  <p className="mt-2 text-gray-600">Loading voting information...</p>
+                </div>
+              ) : voterInfo ? (
+                <div className="space-y-6">
+                  {/* Election Information */}
+                  {voterInfo.election && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Calendar className="h-5 w-5 text-civic-blue" />
+                          When is my election?
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <p className="font-semibold text-lg">{voterInfo.election.name}</p>
+                          <p className="text-gray-600">
+                            <strong>Date:</strong> {new Date(voterInfo.election.electionDay).toLocaleDateString('en-US', { 
+                              weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+                            })}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Polling Locations */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <MapPin className="h-5 w-5 text-civic-blue" />
+                        Where do I vote?
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {voterInfo.pollingLocations && voterInfo.pollingLocations.length > 0 ? (
+                        <div className="space-y-4">
+                          {voterInfo.pollingLocations.map((location: any, index: number) => (
+                            <div key={index} className="p-4 border rounded-lg">
+                              <h4 className="font-semibold">{location.address.locationName || 'Polling Location'}</h4>
+                              <p className="text-gray-600">
+                                {location.address.line1}, {location.address.city}, {location.address.state} {location.address.zip}
+                              </p>
+                              {location.pollingHours && (
+                                <p className="text-sm text-gray-500 mt-1">
+                                  <Clock className="h-4 w-4 inline mr-1" />
+                                  Hours: {location.pollingHours}
+                                </p>
+                              )}
+                              {location.notes && (
+                                <p className="text-sm text-blue-600 mt-1">{location.notes}</p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-gray-600">
+                          Polling location information is not available for this address. 
+                          Contact your local election office for details.
+                        </p>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Early Voting Sites */}
+                  {voterInfo.earlyVoteSites && voterInfo.earlyVoteSites.length > 0 && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Clock className="h-5 w-5 text-civic-blue" />
+                          Early Voting Locations
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          {voterInfo.earlyVoteSites.map((site: any, index: number) => (
+                            <div key={index} className="p-4 border rounded-lg">
+                              <h4 className="font-semibold">{site.address.locationName || 'Early Voting Site'}</h4>
+                              <p className="text-gray-600">
+                                {site.address.line1}, {site.address.city}, {site.address.state} {site.address.zip}
+                              </p>
+                              {site.pollingHours && (
+                                <p className="text-sm text-gray-500 mt-1">
+                                  <Clock className="h-4 w-4 inline mr-1" />
+                                  Hours: {site.pollingHours}
+                                </p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Drop-off Locations */}
+                  {voterInfo.dropOffLocations && voterInfo.dropOffLocations.length > 0 && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Mail className="h-5 w-5 text-civic-blue" />
+                          Ballot Drop-off Locations
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          {voterInfo.dropOffLocations.map((location: any, index: number) => (
+                            <div key={index} className="p-4 border rounded-lg">
+                              <h4 className="font-semibold">{location.address.locationName || 'Drop-off Location'}</h4>
+                              <p className="text-gray-600">
+                                {location.address.line1}, {location.address.city}, {location.address.state} {location.address.zip}
+                              </p>
+                              {location.pollingHours && (
+                                <p className="text-sm text-gray-500 mt-1">
+                                  <Clock className="h-4 w-4 inline mr-1" />
+                                  Hours: {location.pollingHours}
+                                </p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Election Administration */}
+                  {voterInfo.electionAdministration && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Building className="h-5 w-5 text-civic-blue" />
+                          Election Office Contact
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <h4 className="font-semibold">{voterInfo.electionAdministration.name}</h4>
+                          
+                          {voterInfo.electionAdministration.correspondenceAddress && (
+                            <p className="text-gray-600">
+                              {voterInfo.electionAdministration.correspondenceAddress.line1}, {' '}
+                              {voterInfo.electionAdministration.correspondenceAddress.city}, {' '}
+                              {voterInfo.electionAdministration.correspondenceAddress.state} {' '}
+                              {voterInfo.electionAdministration.correspondenceAddress.zip}
+                            </p>
+                          )}
+                          
+                          <div className="grid md:grid-cols-2 gap-4 pt-2">
+                            {voterInfo.electionAdministration.electionInfoUrl && (
+                              <a 
+                                href={voterInfo.electionAdministration.electionInfoUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-civic-blue hover:text-civic-blue-dark"
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                                Election Information
+                              </a>
+                            )}
+                            
+                            {voterInfo.electionAdministration.electionRegistrationUrl && (
+                              <a 
+                                href={voterInfo.electionAdministration.electionRegistrationUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-civic-blue hover:text-civic-blue-dark"
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                                Voter Registration
+                              </a>
+                            )}
+                            
+                            {voterInfo.electionAdministration.votingLocationFinderUrl && (
+                              <a 
+                                href={voterInfo.electionAdministration.votingLocationFinderUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-civic-blue hover:text-civic-blue-dark"
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                                Find Voting Locations
+                              </a>
+                            )}
+                            
+                            {voterInfo.electionAdministration.ballotInfoUrl && (
+                              <a 
+                                href={voterInfo.electionAdministration.ballotInfoUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-civic-blue hover:text-civic-blue-dark"
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                                What's on my ballot?
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Contests/Ballot Information */}
+                  {voterInfo.contests && voterInfo.contests.length > 0 && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <Vote className="h-5 w-5 text-civic-blue" />
+                          What's on my ballot?
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-4">
+                          {voterInfo.contests.map((contest: any, index: number) => (
+                            <div key={index} className="p-4 border rounded-lg">
+                              <h4 className="font-semibold">{contest.office || contest.type}</h4>
+                              {contest.district && (
+                                <p className="text-sm text-gray-600">District: {contest.district.name}</p>
+                              )}
+                              {contest.candidates && contest.candidates.length > 0 && (
+                                <div className="mt-2">
+                                  <p className="text-sm font-medium text-gray-700">Candidates:</p>
+                                  <ul className="text-sm text-gray-600 mt-1">
+                                    {contest.candidates.map((candidate: any, candidateIndex: number) => (
+                                      <li key={candidateIndex}>
+                                        {candidate.name} {candidate.party && `(${candidate.party})`}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <Vote className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No Voting Information Available</h3>
+                  <p className="text-gray-600">
+                    Voting information is not currently available for this address. 
+                    Try searching with a more specific address or contact your local election office.
+                  </p>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </main>
