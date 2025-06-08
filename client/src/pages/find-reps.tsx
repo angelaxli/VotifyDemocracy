@@ -48,38 +48,13 @@ export default function FindReps() {
       const response = await apiRequest("POST", "/api/representatives/search", { address });
       const data = await response.json();
       
-      // Add sample stances for major issues (in a real app, this would come from additional API calls)
-      const representativesWithStances = data.representatives.map((rep: any) => ({
-        ...rep,
-        stances: {
-          "Abortion": "Supports reproductive rights and access to healthcare",
-          "LGBTQ+ Rights": "Advocates for equal rights and anti-discrimination protections", 
-          "Gun Policy": "Supports common-sense gun safety measures",
-          "Climate Change": "Committed to addressing climate change through clean energy",
-          "Homelessness": "Supports increased funding for housing and mental health services"
-        },
-        recentBills: [
-          {
-            title: "Infrastructure Investment Act",
-            position: "Supported",
-            description: "Voted to invest in roads, bridges, and broadband infrastructure"
-          },
-          {
-            title: "Healthcare Access Expansion",
-            position: "Supported", 
-            description: "Backed legislation to expand healthcare coverage"
-          }
-        ]
-      }));
-
-      setSearchResults({
-        ...data,
-        representatives: representativesWithStances
-      });
+      // Data now comes pre-structured with federal, state, and local categories
+      setSearchResults(data);
       
+      const totalReps = data.federal.length + data.state.length + data.local.length;
       toast({
         title: "Representatives Found",
-        description: `Found ${data.representatives.length} representatives for ${data.formattedAddress}`,
+        description: `Found ${totalReps} representatives for ${data.formattedAddress}`,
       });
     } catch (error) {
       console.error("Error searching representatives:", error);
@@ -103,9 +78,9 @@ export default function FindReps() {
     }
   };
 
-  const federalReps = searchResults?.representatives.filter(rep => rep.level === 'federal') || [];
-  const stateReps = searchResults?.representatives.filter(rep => rep.level === 'state') || [];
-  const localReps = searchResults?.representatives.filter(rep => rep.level === 'local') || [];
+  const federalReps = searchResults?.federal || [];
+  const stateReps = searchResults?.state || [];
+  const localReps = searchResults?.local || [];
 
   return (
     <div className="min-h-screen bg-civic-bg">
