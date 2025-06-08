@@ -57,8 +57,24 @@ export default function LocationMap({ address, className = "" }: LocationMapProp
         }
       } catch (error) {
         console.error('Geocoding error:', error);
-        // Default to Washington DC on error
-        setCoordinates({ lat: 38.8951, lng: -77.0364 });
+        // Use fallback coordinates based on address text
+        const addressLower = address.toLowerCase();
+        if (addressLower.includes('washington') || addressLower.includes('dc')) {
+          setCoordinates({ lat: 38.8951, lng: -77.0364 });
+        } else if (addressLower.includes('san francisco')) {
+          setCoordinates({ lat: 37.7749, lng: -122.4194 });
+        } else if (addressLower.includes('new york')) {
+          setCoordinates({ lat: 40.7128, lng: -74.0060 });
+        } else if (addressLower.includes('austin')) {
+          setCoordinates({ lat: 30.2672, lng: -97.7431 });
+        } else if (addressLower.includes('california') || addressLower.includes('ca')) {
+          setCoordinates({ lat: 36.7783, lng: -119.4179 });
+        } else if (addressLower.includes('texas') || addressLower.includes('tx')) {
+          setCoordinates({ lat: 31.9686, lng: -99.9018 });
+        } else {
+          // Default to center of US
+          setCoordinates({ lat: 39.8283, lng: -98.5795 });
+        }
       } finally {
         setIsLoading(false);
       }

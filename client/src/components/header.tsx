@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Vote } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
 export default function Header() {
@@ -12,10 +12,8 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <Link href="/">
             <div className="flex items-center cursor-pointer">
+              <Vote className="h-8 w-8 text-civic-blue mr-2" />
               <h1 className="text-2xl font-bold text-civic-blue">Votify</h1>
-              <span className="ml-3 text-sm text-gray-600 hidden sm:block">
-                Because Democracy Isn't a Guessing Game
-              </span>
             </div>
           </Link>
           

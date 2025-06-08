@@ -19,7 +19,7 @@ export const getCandidates = async (raceType: "local" | "national") => {
   return await response.json();
 };
 
-export const getElections = async (jurisdiction: string) => {
+export const getElectionsByJurisdiction = async (jurisdiction: string) => {
   const response = await apiRequest("GET", `/api/elections/${encodeURIComponent(jurisdiction)}`);
   return await response.json();
 };
