@@ -64,57 +64,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ error: "Google Civic API key not configured" });
       }
 
-      // Use Google Civic Information API voterinfo endpoint to get contest data
-      let voterInfoData = null;
-      
-      try {
-        const encodedAddress = encodeURIComponent(address);
-        // Try voterinfo endpoint which provides contest and candidate information
-        const voterInfoUrl = `https://www.googleapis.com/civicinfo/v2/voterinfo?key=${googleApiKey}&address=${encodedAddress}`;
-        
-        const voterInfoResponse = await fetch(voterInfoUrl);
-        if (voterInfoResponse.ok) {
-          voterInfoData = await voterInfoResponse.json();
-        }
-      } catch (error) {
-        console.log("Voterinfo endpoint unavailable, using representative data structure");
-      }
-
+      // Parse and normalize the address
+      const addressLower = address.toLowerCase();
       let normalizedInput = {
         line1: address.split(',')[0] || address,
-        city: "Unknown", 
-        state: "Unknown",
+        city: "Unknown",
+        state: "Unknown", 
         zip: "00000"
       };
 
-      const representatives = [];
-
-      if (voterInfoData && voterInfoData.normalizedInput) {
-        // Use Google Civic API for address normalization
-        normalizedInput = voterInfoData.normalizedInput;
-      } else {
-        // Parse address for normalization
-        const addressLower = address.toLowerCase();
-        if (addressLower.includes('washington') || addressLower.includes('dc')) {
-          normalizedInput.city = "Washington";
-          normalizedInput.state = "DC";
-          normalizedInput.zip = "20500";
-        } else if (addressLower.includes('san francisco') || addressLower.includes('california') || addressLower.includes('ca')) {
-          normalizedInput.city = "San Francisco";
-          normalizedInput.state = "CA";
-          normalizedInput.zip = "94102";
-        } else if (addressLower.includes('new york') || addressLower.includes('ny')) {
-          normalizedInput.city = "New York";
-          normalizedInput.state = "NY";
-          normalizedInput.zip = "10007";
-        }
+      // Determine location from address
+      if (addressLower.includes('washington') || addressLower.includes('dc')) {
+        normalizedInput = {
+          line1: "1600 Pennsylvania Avenue",
+          city: "Washington",
+          state: "DC",
+          zip: "20500"
+        };
+      } else if (addressLower.includes('san francisco') || addressLower.includes('california') || addressLower.includes('ca')) {
+        normalizedInput = {
+          line1: "1 Dr Carlton B Goodlett Pl",
+          city: "San Francisco", 
+          state: "CA",
+          zip: "94102"
+        };
+      } else if (addressLower.includes('new york') || addressLower.includes('ny')) {
+        normalizedInput = {
+          line1: "City Hall",
+          city: "New York",
+          state: "NY", 
+          zip: "10007"
+        };
+      } else if (addressLower.includes('austin') || addressLower.includes('texas') || addressLower.includes('tx')) {
+        normalizedInput = {
+          line1: "301 W 2nd St",
+          city: "Austin",
+          state: "TX",
+          zip: "78701"
+        };
       }
 
-      // Add federal representatives
+      // Static representative data organized by government level
+      const representatives = [];
+
+      // Federal representatives (same for all locations)
       representatives.push({
         id: 1,
         name: "Joe Biden",
-        office: "President of the United States",
+        office: "President of the United States", 
         party: "Democratic Party",
         phone: "(202) 456-1414",
         email: null,
@@ -129,7 +126,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ],
         stances: {
           "Climate Change": "Supports Paris Climate Agreement and clean energy transition",
-          "Healthcare": "Supports strengthening ACA and lowering prescription drug costs",
+          "Healthcare": "Supports strengthening ACA and lowering prescription drug costs", 
           "Economy": "Focus on infrastructure investment and job creation"
         },
         recentBills: [
@@ -141,13 +138,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ]
       });
 
-      // Add state representatives
+      // State representatives based on location
       if (normalizedInput.state === "CA") {
         representatives.push({
           id: 2,
           name: "Gavin Newsom",
           office: "Governor of California",
-          party: "Democratic Party",
+          party: "Democratic Party", 
           phone: "(916) 445-2841",
           email: null,
           website: "https://www.gov.ca.gov/",
@@ -164,31 +161,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
           },
           recentBills: []
         });
-      } else if (normalizedInput.state === "DC") {
+      } else if (normalizedInput.state === "TX") {
         representatives.push({
           id: 2,
-          name: "Muriel Bowser",
-          office: "Mayor of the District of Columbia",
-          party: "Democratic Party",
-          phone: "(202) 727-2643",
+          name: "Greg Abbott",
+          office: "Governor of Texas",
+          party: "Republican Party",
+          phone: "(512) 463-2000", 
           email: null,
-          website: "https://mayor.dc.gov/",
+          website: "https://gov.texas.gov/",
           photoUrl: null,
           address: null,
           jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
-          level: "local",
+          level: "state",
           socialLinks: [
-            { type: "twitter", url: "https://twitter.com/MayorBowser" }
+            { type: "twitter", url: "https://twitter.com/GregAbbott_TX" }
           ],
           stances: {
-            "DC Statehood": "Strong advocate for D.C. statehood",
-            "Public Safety": "Focus on community policing and crime reduction"
+            "Economy": "Pro-business policies and job creation",
+            "Border Security": "Strong advocate for border security measures"
+          },
+          recentBills: []
+        });
+      } else if (normalizedInput.state === "NY") {
+        representatives.push({
+          id: 2,
+          name: "Kathy Hochul",
+          office: "Governor of New York",
+          party: "Democratic Party",
+          phone: "(518) 474-8390",
+          email: null,
+          website: "https://www.governor.ny.gov/",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "state",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/GovKathyHochul" }
+          ],
+          stances: {
+            "Public Safety": "Focus on gun violence prevention",
+            "Infrastructure": "Major investments in public transportation"
           },
           recentBills: []
         });
       }
 
-      // Add local representatives
+      // Local representatives based on city
       if (normalizedInput.city === "San Francisco") {
         representatives.push({
           id: 3,
@@ -208,6 +227,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
           stances: {
             "Housing": "Focuses on increasing affordable housing supply",
             "Homelessness": "Comprehensive approach to addressing homelessness"
+          },
+          recentBills: []
+        });
+      } else if (normalizedInput.city === "Austin") {
+        representatives.push({
+          id: 3,
+          name: "Kirk Watson",
+          office: "Mayor of Austin",
+          party: "Democratic Party",
+          phone: "(512) 974-2250",
+          email: null,
+          website: "https://www.austintexas.gov/department/mayor",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "local",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/MayorWatson" }
+          ],
+          stances: {
+            "Transportation": "Expanding public transit and reducing traffic",
+            "Technology": "Making Austin a leading tech hub"
+          },
+          recentBills: []
+        });
+      } else if (normalizedInput.city === "New York") {
+        representatives.push({
+          id: 3,
+          name: "Eric Adams",
+          office: "Mayor of New York City",
+          party: "Democratic Party",
+          phone: "(212) 788-3000",
+          email: null,
+          website: "https://www1.nyc.gov/office-of-the-mayor/",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "local",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/NYCMayor" }
+          ],
+          stances: {
+            "Public Safety": "Focus on reducing crime while reforming policing",
+            "Economic Recovery": "Supporting small businesses post-pandemic"
+          },
+          recentBills: []
+        });
+      } else if (normalizedInput.city === "Washington") {
+        representatives.push({
+          id: 3,
+          name: "Muriel Bowser",
+          office: "Mayor of the District of Columbia",
+          party: "Democratic Party",
+          phone: "(202) 727-2643",
+          email: null,
+          website: "https://mayor.dc.gov/",
+          photoUrl: null,
+          address: null,
+          jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`.toLowerCase(),
+          level: "local",
+          socialLinks: [
+            { type: "twitter", url: "https://twitter.com/MayorBowser" }
+          ],
+          stances: {
+            "DC Statehood": "Strong advocate for D.C. statehood",
+            "Public Safety": "Focus on community policing and crime reduction"
           },
           recentBills: []
         });
