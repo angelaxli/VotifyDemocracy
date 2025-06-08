@@ -11,15 +11,6 @@ export default function HeroSection() {
           Find your elected officials, track upcoming elections, and compare candidates with trusted, 
           non-partisan information at your fingertips.
         </p>
-        
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md mx-auto">
-          <h3 className="text-civic-gray text-xl font-semibold mb-4">Get Started</h3>
-          <Link href="/find-reps">
-            <Button className="w-full bg-civic-blue hover:bg-blue-800 text-white font-semibold py-3 text-lg">
-              Find Your Representatives
-            </Button>
-          </Link>
-        </div>
       </div>
     </section>
   );
