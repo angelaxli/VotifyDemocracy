@@ -221,68 +221,92 @@ export default function CandidateComparison() {
           
           <div className="grid md:grid-cols-2 gap-8">
             {candidates.map((candidate: any) => (
-              <div key={candidate.id} className="bg-white border-2 border-gray-200 rounded-xl p-6">
-                {/* Candidate photo */}
-                <div className="w-32 h-32 mx-auto mb-6">
-                  {candidate.photoUrl ? (
-                    <img 
-                      src={candidate.photoUrl} 
-                      alt={`${candidate.name} profile photo`}
-                      className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
-                    />
-                  ) : (
-                    <div className={`w-32 h-32 bg-gradient-to-br ${getPartyColor(candidate.party)} rounded-full flex items-center justify-center`}>
-                      <User className="text-white text-4xl" />
+              <div key={candidate.id} className="bg-gradient-to-br from-white to-blue-50 border-2 border-blue-200 rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                {/* Candidate header with colorful gradient */}
+                <div className={`bg-gradient-to-r ${getPartyColor(candidate.party)} rounded-lg p-4 mb-6 text-white`}>
+                  <div className="text-center">
+                    <div className="w-24 h-24 mx-auto mb-4">
+                      {candidate.photoUrl ? (
+                        <img 
+                          src={candidate.photoUrl} 
+                          alt={`${candidate.name} profile photo`}
+                          className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
+                        />
+                      ) : (
+                        <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border-4 border-white/30">
+                          <User className="text-white text-3xl" />
+                        </div>
+                      )}
                     </div>
-                  )}
+                    <h5 className="text-xl font-bold mb-2">{candidate.name}</h5>
+                    <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30">
+                      {candidate.party} • Age {candidate.age}
+                    </Badge>
+                  </div>
                 </div>
                 
-                <div className="text-center mb-6">
-                  <h5 className="text-xl font-bold mb-2">{candidate.name}</h5>
-                  <p className="text-gray-600">{candidate.background}</p>
-                  <p className="text-sm text-gray-500">{candidate.party} • Age {candidate.age}</p>
+                <div className="mb-6">
+                  <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg mb-4">
+                    <h6 className="font-semibold text-blue-900 mb-2">Background</h6>
+                    <p className="text-blue-800 text-sm">{candidate.background}</p>
+                  </div>
                 </div>
 
                 {/* Contact Info */}
-                <div className="mb-6 space-y-2">
-                  <a 
-                    href={`mailto:${candidate.email}`} 
-                    className="flex items-center text-sm text-civic-blue hover:text-blue-800"
-                  >
-                    <Mail className="mr-2 h-4 w-4" />
-                    {candidate.email}
-                  </a>
-                  <a 
-                    href={`tel:${candidate.phone}`} 
-                    className="flex items-center text-sm text-civic-blue hover:text-blue-800"
-                  >
-                    <Phone className="mr-2 h-4 w-4" />
-                    {candidate.phone}
-                  </a>
+                <div className="mb-6">
+                  <div className="bg-green-50 border-l-4 border-green-400 p-4 rounded-r-lg">
+                    <h6 className="font-semibold text-green-900 mb-3">Contact Information</h6>
+                    <div className="space-y-2">
+                      {candidate.email && (
+                        <a 
+                          href={`mailto:${candidate.email}`} 
+                          className="flex items-center text-sm text-green-700 hover:text-green-900 transition-colors"
+                        >
+                          <Mail className="mr-2 h-4 w-4" />
+                          {candidate.email}
+                        </a>
+                      )}
+                      {candidate.phone && (
+                        <a 
+                          href={`tel:${candidate.phone}`} 
+                          className="flex items-center text-sm text-green-700 hover:text-green-900 transition-colors"
+                        >
+                          <Phone className="mr-2 h-4 w-4" />
+                          {candidate.phone}
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Issue Positions */}
-                <div className="space-y-4">
-                  <h6 className="font-semibold text-gray-800">Key Positions:</h6>
-                  
-                  {Object.entries(candidate.positions || {}).map(([issue, position]) => (
-                    <div key={issue}>
-                      <h6 className="font-medium text-sm">{issue}</h6>
-                      <p className="text-xs text-gray-600 mt-1">{position as string}</p>
+                <div className="mb-6">
+                  <div className="bg-purple-50 border-l-4 border-purple-400 p-4 rounded-r-lg">
+                    <h6 className="font-semibold text-purple-900 mb-4">Policy Positions</h6>
+                    <div className="space-y-3">
+                      {Object.entries(candidate.positions || {}).map(([issue, position]) => (
+                        <div key={issue} className="bg-white/60 rounded-lg p-3 border border-purple-200">
+                          <h6 className="font-medium text-purple-900 text-sm mb-2">{issue}</h6>
+                          <p className="text-xs text-purple-800 leading-relaxed">{position as string}</p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
 
                 {/* Recent Actions */}
-                <div className="mt-6 pt-4 border-t border-gray-200">
-                  <h6 className="font-semibold text-gray-800 mb-3">
-                    Recent Actions:
-                  </h6>
-                  <div className="space-y-2">
+                <div className="bg-orange-50 border-l-4 border-orange-400 p-4 rounded-r-lg">
+                  <h6 className="font-semibold text-orange-900 mb-3">Recent Actions</h6>
+                  <div className="space-y-3">
                     {(candidate.recentActions || []).map((action: any, index: number) => (
-                      <div key={index} className={`border rounded p-2 ${getActionBadgeColor(action.position || action.type)}`}>
-                        <p className="text-xs font-medium">{action.title} - {action.position || action.type}</p>
-                        <p className="text-xs">{action.description}</p>
+                      <div key={index} className="bg-white/60 rounded-lg p-3 border border-orange-200">
+                        <div className="flex items-start justify-between mb-2">
+                          <p className="text-sm font-medium text-orange-900">{action.title}</p>
+                          <Badge className={`text-xs ${getActionBadgeColor(action.position || action.type)}`}>
+                            {action.position || action.type}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-orange-800 leading-relaxed">{action.description}</p>
                       </div>
                     ))}
                   </div>

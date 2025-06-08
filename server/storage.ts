@@ -122,7 +122,7 @@ export class MemStorage implements IStorage {
         phone: null,
         email: "info@anthonyforsanjose.com",
         website: "https://anthonyforsanjose.com",
-        photoUrl: "/attached_assets/Screenshot 2025-06-08 at 4.17.43 PM_1749424672840.png",
+        photoUrl: null,
         age: 33,
         background: "Planning Commission Chair with extensive experience in urban planning and community development",
         positions: {
@@ -150,7 +150,7 @@ export class MemStorage implements IStorage {
         phone: null,
         email: "gabby@gabbychavezlopez.com",
         website: "https://gabbychavezlopez.com",
-        photoUrl: "/attached_assets/Screenshot 2025-06-08 at 4.17.46 PM_1749424676757.png",
+        photoUrl: null,
         age: 37,
         background: "Executive Director of the Latina Coalition of Silicon Valley with extensive community organizing and advocacy experience",
         positions: {
