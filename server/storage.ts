@@ -65,31 +65,43 @@ export class MemStorage implements IStorage {
     // Seed some initial data for demonstration
     const sampleReps: InsertRepresentative[] = [
       {
-        name: "Sen. Dianne Feinstein",
-        office: "U.S. Senate",
-        party: "Democrat",
-        phone: "(202) 224-3841",
-        email: "senator@feinstein.senate.gov",
-        website: "https://feinstein.senate.gov",
-        photoUrl: null,
-        address: "331 Hart Senate Office Building, Washington, DC 20510",
-        jurisdiction: "san francisco, ca",
-        level: "federal",
+        name: "Gavin Newsom",
+        office: "Governor of California",
+        party: "Democratic",
+        phone: "(916) 445-2841",
+        email: "gavin.newsom@gov.ca.gov",
+        website: "https://gov.ca.gov",
+        photoUrl: "/attached_assets/Screenshot 2025-06-08 at 4.20.39 PM_1749424854143.png",
+        address: "1303 10th Street, Suite 1173, Sacramento, CA 95814",
+        jurisdiction: "california",
+        level: "state",
+        socialLinks: [
+          { type: "Instagram", url: "https://instagram.com/gavinnewsom" },
+          { type: "Twitter", url: "https://twitter.com/gavinnewsom" }
+        ],
         stances: {
-          "Climate Change": "Supports comprehensive climate action including renewable energy initiatives and emissions reduction targets.",
-          "Gun Policies": "Strong advocate for gun safety measures including universal background checks and assault weapons ban.",
-          "Healthcare": "Supports strengthening the Affordable Care Act and reducing prescription drug costs."
+          "Abortion": "Strong advocate for women's rights, supporting abortion access and helping establish California as an abortion sanctuary in 2022. Key legislation including AB 1666, 1242, 2091, 2134, 1918, 2626, as well as SB 245, 345, and 1375 was passed to protect abortion rights. Launched abortion.ca.gov for comprehensive information.",
+          "LGBTQ+": "Strong advocate for the LGBTQ+ community, declaring California the first sanctuary state for transgender youth in 2022. Legislation including AB 439, 378, 1084, 1955, 5, 223, 760, 857, 1825, 2442, and SB 729, 1067, 447 was passed to support transgender rights and equality.",
+          "Gun Policy": "Strong supporter of gun control measures, focusing on expanding background checks, banning assault weapons, and raising minimum gun purchase age to 21. Key legislation includes Proposition 63, AB 339, 1057, 12, 61, 164, 521, 1621, 2571, 960, as well as SB 2, 452, 1327.",
+          "Climate Change": "Supports California's fight against climate change with policies for carbon neutrality by 2045. Banned new gas-powered car sales by 2035, boosting electric vehicle infrastructure, expanding renewable energy, and holding companies accountable for emissions.",
+          "Homelessness": "Considers homelessness a top priority, combining increased funding, executive orders, and new laws. Directed state agencies to clear homeless encampments while connecting individuals to housing and services. Launched Prop 1 Homekey program in 2024. Announced $920 million in new homelessness funding in 2025.",
+          "Immigration": "Supports refugees and positioned California as a safe haven, emphasizing protections for undocumented communities. Consistently opposes federal immigration enforcement actions."
         },
         recentBills: [
           {
-            title: "Infrastructure Investment Act",
-            position: "Supported",
-            description: "Voted in favor of the $1.2 trillion infrastructure package for roads, bridges, and clean energy."
+            title: "Prop 1 Homekey Program",
+            position: "Launched",
+            description: "Launched comprehensive homelessness program in 2024 combining housing services and support programs."
           },
           {
-            title: "Voting Rights Advancement Act",
-            position: "Supported", 
-            description: "Co-sponsored legislation to restore and strengthen voting rights protections."
+            title: "California Abortion Sanctuary Legislation",
+            position: "Signed",
+            description: "Established California as abortion sanctuary state in 2022 with comprehensive protection laws."
+          },
+          {
+            title: "Transgender Youth Sanctuary State",
+            position: "Signed", 
+            description: "Declared California first sanctuary state for transgender youth in 2022 with protective legislation."
           }
         ]
       }

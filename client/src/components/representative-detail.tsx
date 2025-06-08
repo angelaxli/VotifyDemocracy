@@ -29,13 +29,23 @@ export default function RepresentativeDetail({ representative, onClose }: Repres
           <div className="grid md:grid-cols-3 gap-8">
             {/* Profile Info */}
             <div className="md:col-span-1">
-              <div className="bg-gradient-to-br from-civic-blue to-civic-light h-64 rounded-xl flex items-center justify-center mb-6">
-                <div className="text-white text-8xl">
-                  <svg className="h-24 w-24" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                  </svg>
+              {representative.photoUrl ? (
+                <div className="h-64 rounded-xl mb-6 overflow-hidden">
+                  <img 
+                    src={representative.photoUrl} 
+                    alt={`${representative.name} profile photo`}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-              </div>
+              ) : (
+                <div className="bg-gradient-to-br from-civic-blue to-civic-light h-64 rounded-xl flex items-center justify-center mb-6">
+                  <div className="text-white text-8xl">
+                    <svg className="h-24 w-24" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                  </div>
+                </div>
+              )}
               
               <h4 className="text-2xl font-bold mb-2">{representative.name}</h4>
               <p className="text-gray-600 mb-1">{representative.office}</p>
@@ -70,6 +80,25 @@ export default function RepresentativeDetail({ representative, onClose }: Repres
                     <ExternalLink className="mr-3 h-4 w-4" />
                     Official Website
                   </a>
+                )}
+                
+                {/* Social Media Links */}
+                {representative.socialLinks && representative.socialLinks.length > 0 && (
+                  <div className="pt-3 border-t border-gray-200">
+                    <p className="text-sm font-medium text-gray-700 mb-2">Social Media</p>
+                    {representative.socialLinks.map((link, index) => (
+                      <a 
+                        key={index}
+                        href={link.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center text-civic-blue hover:text-blue-800 transition-colors mb-1"
+                      >
+                        <ExternalLink className="mr-2 h-3 w-3" />
+                        <span className="text-sm">{link.type}: @{link.url.split('/').pop()}</span>
+                      </a>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
