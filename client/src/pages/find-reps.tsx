@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, MapPin, Phone, Mail, Globe, ExternalLink, Users, Building, Flag, Vote, Calendar, Clock } from "lucide-react";
+import { Search, MapPin, Phone, Mail, Globe, ExternalLink, Users, Building, Flag, Vote, Calendar, Clock, Info } from "lucide-react";
 import { FaTwitter, FaFacebook, FaYoutube, FaInstagram } from "react-icons/fa";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
@@ -207,6 +207,16 @@ export default function FindReps() {
                 </div>
               ) : voterInfo ? (
                 <div className="space-y-6">
+                  {/* Message for when specific data isn't available */}
+                  {voterInfo.message && (
+                    <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="flex items-start gap-3">
+                        <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                        <p className="text-blue-800">{voterInfo.message}</p>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Election Information */}
                   {voterInfo.election && (
                     <Card>
@@ -333,70 +343,102 @@ export default function FindReps() {
                       <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                           <Building className="h-5 w-5 text-civic-blue" />
-                          Election Office Contact
+                          Election Office & Resources
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <div className="space-y-3">
-                          <h4 className="font-semibold">{voterInfo.electionAdministration.name}</h4>
+                        <div className="space-y-4">
+                          <div className="p-4 bg-gray-50 rounded-lg">
+                            <h4 className="font-semibold text-lg mb-2">{voterInfo.electionAdministration.name}</h4>
+                            
+                            {voterInfo.electionAdministration.correspondenceAddress && (
+                              <div className="text-gray-600 mb-3">
+                                <p className="font-medium">Contact Address:</p>
+                                <p>
+                                  {voterInfo.electionAdministration.correspondenceAddress.line1}<br />
+                                  {voterInfo.electionAdministration.correspondenceAddress.city}, {' '}
+                                  {voterInfo.electionAdministration.correspondenceAddress.state} {' '}
+                                  {voterInfo.electionAdministration.correspondenceAddress.zip}
+                                </p>
+                              </div>
+                            )}
+                          </div>
                           
-                          {voterInfo.electionAdministration.correspondenceAddress && (
-                            <p className="text-gray-600">
-                              {voterInfo.electionAdministration.correspondenceAddress.line1}, {' '}
-                              {voterInfo.electionAdministration.correspondenceAddress.city}, {' '}
-                              {voterInfo.electionAdministration.correspondenceAddress.state} {' '}
-                              {voterInfo.electionAdministration.correspondenceAddress.zip}
-                            </p>
-                          )}
-                          
-                          <div className="grid md:grid-cols-2 gap-4 pt-2">
-                            {voterInfo.electionAdministration.electionInfoUrl && (
-                              <a 
-                                href={voterInfo.electionAdministration.electionInfoUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-civic-blue hover:text-civic-blue-dark"
-                              >
-                                <ExternalLink className="h-4 w-4" />
-                                Election Information
-                              </a>
-                            )}
-                            
-                            {voterInfo.electionAdministration.electionRegistrationUrl && (
-                              <a 
-                                href={voterInfo.electionAdministration.electionRegistrationUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-civic-blue hover:text-civic-blue-dark"
-                              >
-                                <ExternalLink className="h-4 w-4" />
-                                Voter Registration
-                              </a>
-                            )}
-                            
-                            {voterInfo.electionAdministration.votingLocationFinderUrl && (
-                              <a 
-                                href={voterInfo.electionAdministration.votingLocationFinderUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-civic-blue hover:text-civic-blue-dark"
-                              >
-                                <ExternalLink className="h-4 w-4" />
-                                Find Voting Locations
-                              </a>
-                            )}
-                            
-                            {voterInfo.electionAdministration.ballotInfoUrl && (
-                              <a 
-                                href={voterInfo.electionAdministration.ballotInfoUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-2 text-civic-blue hover:text-civic-blue-dark"
-                              >
-                                <ExternalLink className="h-4 w-4" />
-                                What's on my ballot?
-                              </a>
-                            )}
+                          <div>
+                            <h5 className="font-semibold mb-3">Official Resources</h5>
+                            <div className="grid md:grid-cols-2 gap-3">
+                              {voterInfo.electionAdministration.electionInfoUrl && (
+                                <a 
+                                  href={voterInfo.electionAdministration.electionInfoUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2 p-3 border rounded-lg hover:bg-gray-50 text-civic-blue hover:text-civic-blue-dark transition-colors"
+                                >
+                                  <ExternalLink className="h-4 w-4" />
+                                  General Election Information
+                                </a>
+                              )}
+                              
+                              {voterInfo.electionAdministration.electionRegistrationUrl && (
+                                <a 
+                                  href={voterInfo.electionAdministration.electionRegistrationUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2 p-3 border rounded-lg hover:bg-gray-50 text-civic-blue hover:text-civic-blue-dark transition-colors"
+                                >
+                                  <ExternalLink className="h-4 w-4" />
+                                  Register to Vote
+                                </a>
+                              )}
+                              
+                              {voterInfo.electionAdministration.electionRegistrationConfirmationUrl && (
+                                <a 
+                                  href={voterInfo.electionAdministration.electionRegistrationConfirmationUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2 p-3 border rounded-lg hover:bg-gray-50 text-civic-blue hover:text-civic-blue-dark transition-colors"
+                                >
+                                  <ExternalLink className="h-4 w-4" />
+                                  Check Registration Status
+                                </a>
+                              )}
+                              
+                              {voterInfo.electionAdministration.votingLocationFinderUrl && (
+                                <a 
+                                  href={voterInfo.electionAdministration.votingLocationFinderUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2 p-3 border rounded-lg hover:bg-gray-50 text-civic-blue hover:text-civic-blue-dark transition-colors"
+                                >
+                                  <ExternalLink className="h-4 w-4" />
+                                  Find Your Polling Place
+                                </a>
+                              )}
+                              
+                              {voterInfo.electionAdministration.ballotInfoUrl && (
+                                <a 
+                                  href={voterInfo.electionAdministration.ballotInfoUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2 p-3 border rounded-lg hover:bg-gray-50 text-civic-blue hover:text-civic-blue-dark transition-colors"
+                                >
+                                  <ExternalLink className="h-4 w-4" />
+                                  View Sample Ballot
+                                </a>
+                              )}
+                              
+                              {voterInfo.electionAdministration.electionRulesUrl && (
+                                <a 
+                                  href={voterInfo.electionAdministration.electionRulesUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-2 p-3 border rounded-lg hover:bg-gray-50 text-civic-blue hover:text-civic-blue-dark transition-colors"
+                                >
+                                  <ExternalLink className="h-4 w-4" />
+                                  Voting Rules & Procedures
+                                </a>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </CardContent>
