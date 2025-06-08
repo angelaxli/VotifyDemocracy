@@ -64,12 +64,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ error: "Google API key not configured" });
       }
 
-      // Call Google Civic Information API
+      // Call Google Civic Information API - correct endpoint
       const googleApiUrl = `https://www.googleapis.com/civicinfo/v2/representatives?key=${googleApiKey}&address=${encodeURIComponent(address)}`;
       
       const response = await fetch(googleApiUrl);
       if (!response.ok) {
-        console.error("Google Civic API error:", response.status, response.statusText);
+        const errorText = await response.text();
+        console.error("Google Civic API error:", response.status, response.statusText, errorText);
         return res.status(500).json({ error: "Failed to fetch representative data" });
       }
 
