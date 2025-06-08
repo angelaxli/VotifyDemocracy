@@ -138,20 +138,20 @@ export default function CandidateComparison() {
     }
 
     // For San Jose elections, use authentic candidate data from backend
-    if (election.name.toLowerCase().includes('san jose') || election.name.toLowerCase().includes('council district 3')) {
+    if (election.name?.toLowerCase().includes('san jose') || election.name?.toLowerCase().includes('council district 3')) {
       return { 
         candidates: localCandidates || [], 
-        title: election.name,
+        title: election.name || 'San Jose Election',
         isAuthentic: true
       };
     }
     // For other CA state elections, use national candidates as fallback
-    else if (election.jurisdiction.includes('state:ca') && election.name.toLowerCase().includes('senate')) {
-      return { candidates: nationalCandidates, title: election.name };
+    else if (election.jurisdiction?.includes('state:ca') && election.name?.toLowerCase().includes('senate')) {
+      return { candidates: nationalCandidates, title: election.name || 'Senate Election' };
     } 
     // Default case
     else {
-      return { candidates: [], title: `${election.name} - Candidate information not available` };
+      return { candidates: [], title: `${election.name || 'Unknown Election'} - Candidate information not available` };
     }
   };
 
@@ -219,7 +219,7 @@ export default function CandidateComparison() {
           <h4 className="text-2xl font-semibold text-center mb-8">{raceTitle}</h4>
           
           <div className="grid md:grid-cols-2 gap-8">
-            {candidates.map((candidate) => (
+            {candidates.map((candidate: any) => (
               <div key={candidate.id} className="bg-white border-2 border-gray-200 rounded-xl p-6">
                 {/* Candidate photo placeholder */}
                 <div className={`w-32 h-32 bg-gradient-to-br ${getPartyColor(candidate.party)} rounded-full flex items-center justify-center mx-auto mb-6`}>
@@ -254,10 +254,10 @@ export default function CandidateComparison() {
                 <div className="space-y-4">
                   <h6 className="font-semibold text-gray-800">Key Positions:</h6>
                   
-                  {Object.entries(candidate.positions).map(([issue, position]) => (
+                  {Object.entries(candidate.positions || {}).map(([issue, position]) => (
                     <div key={issue}>
                       <h6 className="font-medium text-sm">{issue}</h6>
-                      <p className="text-xs text-gray-600 mt-1">{position}</p>
+                      <p className="text-xs text-gray-600 mt-1">{position as string}</p>
                     </div>
                   ))}
                 </div>
@@ -268,9 +268,9 @@ export default function CandidateComparison() {
                     Recent Actions:
                   </h6>
                   <div className="space-y-2">
-                    {candidate.recentActions.map((action, index) => (
-                      <div key={index} className={`border rounded p-2 ${getActionBadgeColor(action.type)}`}>
-                        <p className="text-xs font-medium">{action.title} - {action.type}</p>
+                    {(candidate.recentActions || []).map((action: any, index: number) => (
+                      <div key={index} className={`border rounded p-2 ${getActionBadgeColor(action.position || action.type)}`}>
+                        <p className="text-xs font-medium">{action.title} - {action.position || action.type}</p>
                         <p className="text-xs">{action.description}</p>
                       </div>
                     ))}
