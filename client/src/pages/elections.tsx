@@ -7,9 +7,30 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 
 export default function Elections() {
+  // Get user's location from localStorage if available
+  const getUserLocation = () => {
+    if (typeof window !== 'undefined') {
+      const lastSearch = localStorage.getItem('lastSearchLocation');
+      if (lastSearch) {
+        const parsed = JSON.parse(lastSearch);
+        return { state: parsed.state, city: parsed.city };
+      }
+    }
+    return { state: null, city: null };
+  };
+
+  const userLocation = getUserLocation();
+  
   const { data: elections, isLoading, error } = useQuery({
-    queryKey: ["/api/elections"],
-    queryFn: () => getElections()
+    queryKey: ["/api/elections", userLocation.state, userLocation.city],
+    queryFn: () => {
+      const params = new URLSearchParams();
+      if (userLocation.state) params.append('userState', userLocation.state);
+      if (userLocation.city) params.append('userCity', userLocation.city);
+      
+      const url = `/api/elections${params.toString() ? `?${params.toString()}` : ''}`;
+      return fetch(url).then(res => res.json());
+    }
   });
 
   const formatDate = (dateString: string) => {
@@ -68,13 +89,20 @@ export default function Elections() {
         {elections && elections.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {elections.map((election: any) => (
-              <Card key={election.id} className="hover:shadow-lg transition-shadow">
+              <Card key={election.id} className={`hover:shadow-lg transition-shadow ${election.isNearby ? 'border-blue-500 border-2' : ''}`}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <CardTitle className="text-lg font-semibold text-gray-900 mb-2">
-                        {election.name}
-                      </CardTitle>
+                      <div className="flex items-center gap-2 mb-2">
+                        <CardTitle className="text-lg font-semibold text-gray-900">
+                          {election.name}
+                        </CardTitle>
+                        {election.isNearby && (
+                          <Badge className="bg-blue-500 text-white">
+                            Near You
+                          </Badge>
+                        )}
+                      </div>
                       <Badge className={getElectionTypeColor(election.type)}>
                         {election.type.charAt(0).toUpperCase() + election.type.slice(1)} Election
                       </Badge>

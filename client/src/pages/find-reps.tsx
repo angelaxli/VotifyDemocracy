@@ -56,6 +56,18 @@ export default function FindReps() {
       // Data now comes pre-structured with federal, state, and local categories
       setSearchResults(data);
       
+      // Store user location in localStorage for elections page
+      if (data.normalizedAddress) {
+        const addressParts = data.normalizedAddress.split(',').map((part: string) => part.trim());
+        if (addressParts.length >= 2) {
+          const locationData = {
+            state: addressParts[addressParts.length - 2] || '',
+            city: addressParts[addressParts.length - 3] || ''
+          };
+          localStorage.setItem('lastSearchLocation', JSON.stringify(locationData));
+        }
+      }
+      
       // Also fetch voter information for this address
       await fetchVoterInfo(address);
       

@@ -64,43 +64,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ error: "Google Civic API key not configured" });
       }
 
-      // Parse and normalize the address
-      const addressLower = address.toLowerCase();
+      // Try to use Google Civic API to normalize the address first
       let normalizedInput = {
-        line1: address.split(',')[0] || address,
+        line1: address,
         city: "Unknown",
         state: "Unknown", 
         zip: "00000"
       };
 
-      // Determine location from address
-      if (addressLower.includes('washington') || addressLower.includes('dc')) {
+      try {
+        // Use Google Civic API to get normalized address
+        const encodedAddress = encodeURIComponent(address);
+        const civicUrl = `https://www.googleapis.com/civicinfo/v2/representatives?key=${googleApiKey}&address=${encodedAddress}`;
+        
+        const civicResponse = await fetch(civicUrl);
+        if (civicResponse.ok) {
+          const civicData = await civicResponse.json();
+          if (civicData.normalizedInput) {
+            normalizedInput = {
+              line1: civicData.normalizedInput.line1 || address.split(',')[0] || address,
+              city: civicData.normalizedInput.city || "Unknown",
+              state: civicData.normalizedInput.state || "Unknown",
+              zip: civicData.normalizedInput.zip || "00000"
+            };
+          }
+        }
+      } catch (error) {
+        console.error("Error normalizing address with Google Civic API:", error);
+        // Fall back to basic parsing
+        const parts = address.split(',').map((part: string) => part.trim());
         normalizedInput = {
-          line1: "1600 Pennsylvania Avenue",
-          city: "Washington",
-          state: "DC",
-          zip: "20500"
-        };
-      } else if (addressLower.includes('san francisco') || addressLower.includes('california') || addressLower.includes('ca')) {
-        normalizedInput = {
-          line1: "1 Dr Carlton B Goodlett Pl",
-          city: "San Francisco", 
-          state: "CA",
-          zip: "94102"
-        };
-      } else if (addressLower.includes('new york') || addressLower.includes('ny')) {
-        normalizedInput = {
-          line1: "City Hall",
-          city: "New York",
-          state: "NY", 
-          zip: "10007"
-        };
-      } else if (addressLower.includes('austin') || addressLower.includes('texas') || addressLower.includes('tx')) {
-        normalizedInput = {
-          line1: "301 W 2nd St",
-          city: "Austin",
-          state: "TX",
-          zip: "78701"
+          line1: parts[0] || address,
+          city: parts[1] || "Unknown",
+          state: parts[2] || "Unknown",
+          zip: parts[3] || "00000"
         };
       }
 
@@ -528,7 +525,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Store the search in our database
+      // Store the search in our database  
       await storage.createAddressSearch({
         address,
         normalizedAddress: `${normalizedInput.line1}, ${normalizedInput.city}, ${normalizedInput.state} ${normalizedInput.zip}`,
@@ -540,13 +537,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const state = representatives.filter(rep => rep.level === "state");
       const local = representatives.filter(rep => rep.level === "local");
 
-      // Return structured JSON object as specified
+      // Return the exact address the user entered, not a normalized version
+      const userFormattedAddress = normalizedInput.line1.includes(address.split(',')[0]) ? 
+        `${normalizedInput.line1}, ${normalizedInput.city}, ${normalizedInput.state} ${normalizedInput.zip}` :
+        address; // Use original address if normalization changed the street address
+
       res.json({
         federal,
-        state,
+        state, 
         local,
-        formattedAddress: `${normalizedInput.line1}, ${normalizedInput.city}, ${normalizedInput.state} ${normalizedInput.zip}`,
-        jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`
+        formattedAddress: userFormattedAddress,
+        jurisdiction: `${normalizedInput.city}, ${normalizedInput.state}`,
+        userAddress: address, // Include original user input
+        normalizedAddress: `${normalizedInput.line1}, ${normalizedInput.city}, ${normalizedInput.state} ${normalizedInput.zip}`
       });
     } catch (error) {
       console.error("Error searching representatives:", error);
@@ -613,9 +616,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all upcoming elections (without jurisdiction filter)
+  // Get all upcoming elections with optional location filter
   app.get("/api/elections", async (req, res) => {
     try {
+      const { userState, userCity } = req.query;
       const googleApiKey = process.env.GOOGLE_CIVIC_API_KEY;
       if (!googleApiKey) {
         return res.status(500).json({ error: "Google Civic API key not configured" });
@@ -630,18 +634,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const data: GoogleElectionsResponse = await response.json();
       
-      const elections = data.elections.map((election, index) => ({
-        id: parseInt(election.id),
-        name: election.name,
-        date: election.electionDay,
-        jurisdiction: election.ocdDivisionId || "Unknown",
-        type: election.name.toLowerCase().includes('primary') ? 'primary' : 
-              election.name.toLowerCase().includes('general') ? 'general' : 'special',
-        registrationDeadline: null,
-        earlyVotingStart: null,
-        earlyVotingEnd: null,
-        electionOfficeUrl: null
-      }));
+      const elections = data.elections.map((election, index) => {
+        const isNearby = userState && election.ocdDivisionId && 
+          election.ocdDivisionId.toLowerCase().includes(userState.toString().toLowerCase());
+        
+        return {
+          id: parseInt(election.id),
+          name: election.name,
+          date: election.electionDay,
+          jurisdiction: election.ocdDivisionId || "Unknown",
+          type: election.name.toLowerCase().includes('primary') ? 'primary' : 
+                election.name.toLowerCase().includes('general') ? 'general' : 'special',
+          registrationDeadline: null,
+          earlyVotingStart: null,
+          earlyVotingEnd: null,
+          electionOfficeUrl: null,
+          isNearby: isNearby || false
+        };
+      });
 
       res.json(elections);
     } catch (error) {
