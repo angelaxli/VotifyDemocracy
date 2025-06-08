@@ -1,0 +1,126 @@
+[
+  {
+    "id": 1,
+    "name": "Sarah Chen",
+    "office": "Mayor",
+    "party": "Democrat",
+    "age": 45,
+    "background": "Current City Supervisor",
+    "phone": "(415) 555-0123",
+    "email": "sarah@chenformayor.com",
+    "website": "https://chenformayor.com",
+    "raceType": "local",
+    "positions": {
+      "Housing & Homelessness": "Proposes building 15,000 affordable housing units and expanding mental health services",
+      "Climate Action": "Supports carbon neutrality by 2030 and increased public transit funding",
+      "Public Safety": "Advocates for community policing reforms and violence prevention programs",
+      "LGBTQ+": "Strong supporter of LGBTQ+ rights and expanding anti-discrimination protections",
+      "Gun Policies": "Supports local gun safety measures and community violence intervention"
+    },
+    "recentActions": [
+      {
+        "title": "Affordable Housing Bond",
+        "type": "Supported",
+        "description": "Voted yes on $600M bond for affordable housing development"
+      },
+      {
+        "title": "Public Transit Expansion",
+        "type": "Supported",
+        "description": "Co-authored measure to expand bus rapid transit"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Michael Rodriguez",
+    "office": "Mayor",
+    "party": "Republican",
+    "age": 52,
+    "background": "Former Police Chief",
+    "phone": "(415) 555-0456",
+    "email": "mike@rodriguezformayor.com",
+    "website": "https://rodriguezformayor.com",
+    "raceType": "local",
+    "positions": {
+      "Housing & Homelessness": "Focuses on law enforcement approach to homeless encampments and streamlined permitting",
+      "Climate Action": "Supports market-based solutions and nuclear energy as part of climate strategy",
+      "Public Safety": "Proposes increased police funding and stricter enforcement of quality-of-life crimes",
+      "LGBTQ+": "Supports equal rights while emphasizing religious freedom protections",
+      "Gun Policies": "Advocates for enforcing existing gun laws and supporting law enforcement"
+    },
+    "recentActions": [
+      {
+        "title": "Police Overtime Budget",
+        "type": "Supported",
+        "description": "Advocated for increased police overtime funding"
+      },
+      {
+        "title": "Homeless Services Reform",
+        "type": "Mixed",
+        "description": "Supported some services but opposed supervised injection sites"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Rep. Katie Porter",
+    "office": "U.S. Senate",
+    "party": "Democrat",
+    "age": 50,
+    "background": "U.S. Representative",
+    "phone": "(202) 225-5611",
+    "email": "info@katieporter.com",
+    "website": "https://katieporter.com",
+    "raceType": "national",
+    "positions": {
+      "Healthcare": "Supports Medicare for All and prescription drug price negotiations",
+      "Climate Change": "Advocates for Green New Deal and clean energy investment",
+      "Economic Policy": "Focuses on consumer protection and corporate accountability",
+      "LGBTQ+": "Champion of LGBTQ+ rights and equality legislation",
+      "Gun Policies": "Supports comprehensive gun safety legislation including assault weapons ban"
+    },
+    "recentActions": [
+      {
+        "title": "Consumer Protection Act",
+        "type": "Authored",
+        "description": "Introduced legislation to strengthen consumer financial protections"
+      },
+      {
+        "title": "Climate Investment Bill",
+        "type": "Supported",
+        "description": "Voted for major climate investment and clean energy initiatives"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Steve Garvey",
+    "office": "U.S. Senate",
+    "party": "Republican",
+    "age": 75,
+    "background": "Former MLB Player",
+    "phone": "(619) 555-0789",
+    "email": "info@garveyforsenate.com",
+    "website": "https://garveyforsenate.com",
+    "raceType": "national",
+    "positions": {
+      "Healthcare": "Supports market-based healthcare solutions and price transparency",
+      "Climate Change": "Emphasizes technology innovation and nuclear energy development",
+      "Economic Policy": "Advocates for reduced regulations and business-friendly policies",
+      "LGBTQ+": "Supports equal treatment while emphasizing traditional values",
+      "Gun Policies": "Defends Second Amendment rights while supporting background checks"
+    },
+    "recentActions": [
+      {
+        "title": "Small Business Support",
+        "type": "Platform",
+        "description": "Proposes tax incentives for small business growth"
+      },
+      {
+        "title": "Energy Innovation Act",
+        "type": "Supported",
+        "description": "Advocates for technology-based solutions to energy challenges"
+      }
+    ]
+  }
+]

@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "2024 General Election",
+    "date": "November 5, 2024",
+    "type": "national",
+    "registrationDeadline": "October 21, 2024",
+    "earlyVotingStart": "October 7, 2024",
+    "earlyVotingEnd": "October 30, 2024",
+    "electionOfficeUrl": "https://sfelections.sfgov.org",
+    "jurisdiction": "san francisco, ca"
+  },
+  {
+    "id": 2,
+    "name": "Municipal Election",
+    "date": "November 7, 2023",
+    "type": "local",
+    "registrationDeadline": "October 23, 2023",
+    "earlyVotingStart": "October 9, 2023",
+    "earlyVotingEnd": "October 30, 2023",
+    "electionOfficeUrl": "https://sfelections.sfgov.org/polling-locations",
+    "jurisdiction": "san francisco, ca"
+  },
+  {
+    "id": 3,
+    "name": "Special Election - Proposition A",
+    "date": "March 5, 2024",
+    "type": "local",
+    "registrationDeadline": "February 20, 2024",
+    "earlyVotingStart": "February 5, 2024",
+    "earlyVotingEnd": "March 1, 2024",
+    "electionOfficeUrl": "https://sfelections.sfgov.org",
+    "jurisdiction": "san francisco, ca"
+  }
+]

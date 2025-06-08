@@ -1,0 +1,95 @@
+[
+  {
+    "id": 1,
+    "name": "Sen. Dianne Feinstein",
+    "office": "U.S. Senate",
+    "party": "Democrat",
+    "phone": "(202) 224-3841",
+    "email": "senator@feinstein.senate.gov",
+    "website": "https://feinstein.senate.gov",
+    "address": "331 Hart Senate Office Building, Washington, DC 20510",
+    "jurisdiction": "san francisco, ca",
+    "level": "federal",
+    "stances": {
+      "Climate Change": "Supports comprehensive climate action including renewable energy initiatives and emissions reduction targets.",
+      "Gun Policies": "Strong advocate for gun safety measures including universal background checks and assault weapons ban.",
+      "Healthcare": "Supports strengthening the Affordable Care Act and reducing prescription drug costs.",
+      "LGBTQ+": "Long-time supporter of LGBTQ+ rights including marriage equality and anti-discrimination protections.",
+      "Homelessness": "Advocates for federal funding for affordable housing and mental health services."
+    },
+    "recentBills": [
+      {
+        "title": "Infrastructure Investment Act",
+        "position": "Supported",
+        "description": "Voted in favor of the $1.2 trillion infrastructure package for roads, bridges, and clean energy."
+      },
+      {
+        "title": "Voting Rights Advancement Act",
+        "position": "Supported",
+        "description": "Co-sponsored legislation to restore and strengthen voting rights protections."
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Rep. Nancy Pelosi",
+    "office": "U.S. House",
+    "party": "Democrat",
+    "phone": "(202) 225-4965",
+    "email": "sf.nancy@mail.house.gov",
+    "website": "https://pelosi.house.gov",
+    "address": "1236 Longworth House Office Building, Washington, DC 20515",
+    "jurisdiction": "san francisco, ca",
+    "level": "federal",
+    "stances": {
+      "Climate Change": "Champion of the Green New Deal and aggressive climate action policies.",
+      "Gun Policies": "Supports comprehensive gun safety legislation including assault weapons ban.",
+      "Healthcare": "Architect of the Affordable Care Act and supporter of universal healthcare.",
+      "LGBTQ+": "Pioneering advocate for LGBTQ+ rights and equality legislation.",
+      "Homelessness": "Supports federal investment in affordable housing and social services."
+    },
+    "recentBills": [
+      {
+        "title": "Build Back Better Act",
+        "position": "Supported",
+        "description": "Led House passage of comprehensive climate and social spending package."
+      },
+      {
+        "title": "For the People Act",
+        "position": "Supported",
+        "description": "Championed voting rights and election reform legislation."
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "London Breed",
+    "office": "Mayor",
+    "party": "Nonpartisan",
+    "phone": "(415) 554-6141",
+    "email": "mayorlondonbreed@sfgov.org",
+    "website": "https://sfmayor.org",
+    "address": "1 Dr Carlton B Goodlett Pl, San Francisco, CA 94102",
+    "jurisdiction": "san francisco, ca",
+    "level": "local",
+    "stances": {
+      "Climate Change": "Committed to carbon neutrality by 2040 and increasing renewable energy usage citywide.",
+      "Gun Policies": "Supports local gun safety measures while working within state and federal frameworks.",
+      "Healthcare": "Expanding community health programs and mental health services for vulnerable populations.",
+      "LGBTQ+": "Strong advocate for LGBTQ+ community and San Francisco's leadership in equality.",
+      "Homelessness": "Implementing comprehensive approach including housing, services, and accountability measures."
+    },
+    "recentBills": [
+      {
+        "title": "Housing Bond Measure",
+        "position": "Supported",
+        "description": "Championed $600 million housing bond to create affordable housing units."
+      },
+      {
+        "title": "Mental Health Reform",
+        "position": "Supported",
+        "description": "Expanded mental health and substance abuse treatment programs citywide."
+      }
+    ]
+  }
+]
