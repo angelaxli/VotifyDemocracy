@@ -96,17 +96,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Fall back to intelligent parsing of the user's address
         const parts = address.split(',').map((part: string) => part.trim());
         if (parts.length >= 3) {
-          // Extract state from common formats like "CA" or "California"
-          let state = parts[parts.length - 2] || "Unknown";
+          // Handle format: "Street, City, State Zip"
+          const lastPart = parts[parts.length - 1]; // "CA 95120"
+          let state = "Unknown";
           let zip = "00000";
           
-          // Check if last part contains zip code
-          const lastPart = parts[parts.length - 1];
-          const zipMatch = lastPart.match(/\b\d{5}(-\d{4})?\b/);
-          if (zipMatch) {
-            zip = zipMatch[0];
-            // Remove zip from state if it was included
-            state = lastPart.replace(zipMatch[0], '').trim() || state;
+          // Extract state and zip from last part
+          const stateZipMatch = lastPart.match(/^([A-Z]{2})\s+(\d{5}(-\d{4})?)$/);
+          if (stateZipMatch) {
+            state = stateZipMatch[1]; // "CA"
+            zip = stateZipMatch[2]; // "95120"
+          } else {
+            // Try just state
+            const stateMatch = lastPart.match(/^[A-Z]{2}$/);
+            if (stateMatch) {
+              state = stateMatch[0];
+            }
+            // Try just zip
+            const zipMatch = lastPart.match(/\b\d{5}(-\d{4})?\b/);
+            if (zipMatch) {
+              zip = zipMatch[0];
+            }
           }
           
           normalizedInput = {
