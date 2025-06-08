@@ -99,6 +99,72 @@ export class MemStorage implements IStorage {
       const id = this.currentRepId++;
       this.representatives.set(id, { ...rep, id });
     });
+
+    // San Jose California Special Runoff Election Candidates
+    const sampleCandidates: InsertCandidate[] = [
+      {
+        name: "Anthony Tordillos",
+        office: "San Jose City Council District 3",
+        raceType: "local",
+        party: "Democratic",
+        phone: null,
+        email: "info@anthonyforsanjose.com",
+        website: "https://anthonyforsanjose.com",
+        photoUrl: null,
+        age: null,
+        background: "Planning Commission Chair with extensive experience in urban planning and community development",
+        positions: {
+          "Affordable Housing & Homelessness": "Support housing at all income levels, cut bureaucracy, expand cost-effective shelters, strengthen tenant protections, invest in prevention programs",
+          "Public Safety & Neighborhoods": "Fully staff police department, expand alternative response programs, invest in youth services, use technology for road safety, empower neighborhoods",
+          "Downtown & Economic Vitality": "Streamline downtown housing, support new businesses, improve walkability, enforce codes against blight, support arts organizations",
+          "Sustainability & Transit": "Support improved public transit and BART delivery, promote transit-oriented development, expand bike lanes, require sustainable building practices",
+          "Transparent & Accountable City Hall": "Advocate for publicly financed elections, end revolving door with lobbyists, reform community outreach, restore remote participation",
+          "Abortion": "In favor",
+          "LGBTQ+": "In favor", 
+          "Climate Change": "Advocates sustainable urban development, promotes housing density near transit, supports bike infrastructure and walkable neighborhoods",
+          "Immigration": "In favor"
+        },
+        recentActions: [
+          { title: "Sustainable Development Initiative", position: "Supported", description: "Promoted higher housing density near transit hubs to reduce car dependency" },
+          { title: "Community Safety Programs", position: "Supported", description: "Advocated for alternative response programs and youth services investment" },
+          { title: "Tenant Protection Measures", position: "Supported", description: "Pushed for stronger protections against illegal evictions and rent hikes" }
+        ]
+      },
+      {
+        name: "Gabby Chavez Lopez",
+        office: "San Jose City Council District 3", 
+        raceType: "local",
+        party: "Democratic",
+        phone: null,
+        email: "gabby@gabbychavezlopez.com",
+        website: "https://gabbychavezlopez.com",
+        photoUrl: null,
+        age: null,
+        background: "Executive Director of the Latina Coalition of Silicon Valley with extensive community organizing and advocacy experience",
+        positions: {
+          "Public Safety and Beautify Neighborhoods": "Expand community policing and foot patrols, utilize technology for law enforcement, maintain safe public spaces, enhance cleanliness programs",
+          "Address Homelessness": "Invest in transitional housing with mental health support, promote balanced housing mix, streamline permitting, protect residents from displacement",
+          "Support Small Businesses": "Simplify permitting and reduce fees, offer tax incentives and grants, partner with institutions for workforce training",
+          "Community Spaces and Cultural Engagement": "Develop parks and cultural centers, encourage arts and festivals, promote balanced development for revenue generation",
+          "Sustainable and Innovative Transportation": "Improve bus and light rail reliability, expand bike lanes and EV charging, explore smart transportation solutions",
+          "Abortion": "In favor",
+          "LGBTQ+": "In favor",
+          "Climate Change": "Supports small business growth, streamlined housing development, and sustainable infrastructure investment",
+          "Homelessness": "Opposes punitive measures, advocates compassionate prevention-based solutions, prioritizes permanent supportive housing over temporary shelters",
+          "Immigration": "In favor"
+        },
+        recentActions: [
+          { title: "Community Investment Program", position: "Supported", description: "Developed partnerships to provide workforce training and business support" },
+          { title: "Sustainable Transportation Initiative", position: "Supported", description: "Advocated for improved public transit reliability and green transportation options" },
+          { title: "Anti-Displacement Measures", position: "Supported", description: "Promoted smart development and adaptive reuse to protect long-term residents" }
+        ]
+      }
+    ];
+
+    sampleCandidates.forEach(candidate => {
+      const id = this.currentCandidateId++;
+      this.candidates.set(id, { ...candidate, id });
+    });
   }
 
   async getUser(id: number): Promise<User | undefined> {

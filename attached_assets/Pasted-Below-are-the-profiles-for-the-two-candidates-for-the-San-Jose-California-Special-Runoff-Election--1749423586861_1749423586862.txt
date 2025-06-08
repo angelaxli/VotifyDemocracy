@@ -1,0 +1,108 @@
+Below are the profiles for the two candidates for the San Jose, California Special Runoff Election - Council District 3.
+Please hardcode these profiles based on the information below. Make sure the profiles are the same structure and comparable. Ensure the profiles are easy to comprehend for all users. 
+
+Candidate 1: Anthony Tordillos
+Biography:
+Occupation: Planning Commission Chair 
+Email: info@anthonyforsanjose.com
+Instagram: @anthonyforsanjose
+Reddit: u/AnthonyForSanJose
+Party: Democrat 
+
+Campaign Promises
+1. Affordable Housing & Homelessness
+    - Support housing at all income levels, especially downtown and urban villages.
+    - Cut bureaucracy and reform building codes to speed up and lower construction costs.
+    - Partner with agencies and nonprofits to preserve affordable housing and secure funding.
+    - Expand cost-effective temporary shelters equitably across the city.
+    - Strengthen tenant protections to prevent illegal evictions and rent hikes.
+    - Invest in homelessness prevention programs, rental assistance, mental health, and addiction services.
+    - Scale up affordable housing as the long-term solution.
+2. Public Safety & Neighborhoods
+    - Fully staff the police department and support recruitment/retention.
+    - Expand alternative response programs to free officers for priority calls.
+    - Invest in youth and family services to address root causes of crime.
+    - Use technology and Vision Zero initiatives to improve road safety and infrastructure.
+    - Empower neighborhoods to build safer, connected communities.
+    - Partner with businesses to combat theft, property crime, and blight.
+    - Collaborate with neighborhoods on beautification, tree planting, and public art.
+3. Downtown & Economic Vitality
+    - Streamline downtown housing and support new businesses with incentives.
+    - Improve walkability, bike access, and activate public spaces with events.
+    - Enforce codes to hold property owners accountable for blight.
+    - Support arts and cultural organizations to maintain downtown’s vibrancy.
+4. Sustainability & Transit
+    - Support improved, frequent public transit service and on-time BART delivery.
+    - Promote transit-oriented, mixed-use development to reduce car dependency.
+    - Expand bike lanes, trails, and support zero-emission vehicle infrastructure.
+    - Require sustainable building practices and reduce environmental impacts.
+    - Relocate encampments from parks to protect the environment and connect residents to services.
+5. Transparent & Accountable City Hall
+    - Advocate for publicly financed elections and ranked choice voting.
+    - End the revolving door between government and lobbyists; increase transparency.
+    - Reform community outreach to ensure broad resident participation.
+    - Restore remote public meeting participation for accessibility.
+    - Launch public dashboards to track city service performance and constituent concerns.
+
+Stances:
+1. Abortion: In favor
+    1. No Notable Policy 
+2. LGBTQ+: In favor
+    1. No Notable Policy 
+3. Climate Change: 
+    1. Advocates for sustainable urban development by promoting higher housing density near transit hubs to reduce car use
+    2. Supports small-scale multifamily housing like accessory dwelling units
+    3. Encourages streamlining housing approvals to speed up sustainable construction. 
+    4. Pushes for improved pedestrian and bike infrastructure, including protected bike lanes and multi-use trails
+    5. Backs community-led street safety measures to create safer, more walkable, and environmentally friendly neighborhoods.
+4. Homelessness: 
+    1. In favor of investing in mental health and addiction support and temporary, affordable shelters for immediate relief.
+    2. Supports tenant protections against unfair rent hikes and evictions. 
+    3. Intends to improve community input on shelter locations. 
+5. Immigration: In favor
+    1. No Notable Policy 
+
+Candidate 2:
+Gabby Chavez Lopez
+Biography:
+Occupation: Executive Director of the Latina Coalition of Silicon Valley
+Email: gabby@gabbychavezlopez.com
+Instagram: @gabby4d3 
+Party: Democrat 
+
+Campaign Promises
+1. Strengthen Public Safety and Beautify Neighborhoods
+    - Expand community policing and increase foot patrols to build trust, deter crime, and improve response times.
+    - Utilize technology and data-driven methods to enhance law enforcement effectiveness.
+    - Maintain safe, clean, and welcoming public spaces including parks, streets, and transit areas.
+    - Enhance cleanliness through partnerships and community programs focusing on street maintenance, graffiti removal, and waste management.
+2. Address Homelessness through Prevention and Intervention
+    - Invest in transitional housing combined with mental health and wraparound support services to promote self-sufficiency.
+    - Promote a balanced mix of affordable, workforce, and market-rate housing options.
+    - Streamline permitting and reducing bureaucratic delays to encourage responsible housing development.
+    - Protect long-term residents from displacement by supporting smart development and adaptive reuse of existing structures.
+3. Support Small Businesses
+    - Simplify permitting processes and reduce fees to ease business startup and operation.
+    - Offer tax incentives and grants to businesses that invest in downtown, hire locally, and boost the community economy.
+    - Partner with local institutions to provide workforce training and apprenticeship programs.
+4. Invest in Community Spaces and Cultural Engagement	
+    - Develop and maintain parks, cultural centers, and family-friendly venues to improve quality of life and foster community connections.
+    - Encourage public and private investment in local arts, festivals, and events celebrating San Jose’s diversity.
+    - Promote balanced development that generates revenue to reinvest in city services like public safety, education, and infrastructure.
+5. Promote Sustainable and Innovative Transportation
+    - Improve the reliability, safety, and frequency of bus and light rail services to attract more users.
+    - Expand bike lanes, pedestrian-friendly zones, and electric vehicle charging stations to support green transportation.
+    - Explore cost-effective, smart transportation solutions such as micro-transit and modern traffic management to reduce congestion and improve mobility.
+
+Ideology
+1. Abortion: In favor
+    1. No Notable Policy 
+2. LGBTQ+: In favor
+    1. No Notable Policy 
+3. Climate Change
+    1. In favor of supporting small business growth, streamlined housing development, and investment in sustainable infrastructure like public transit.
+4. Homelessness 
+    1. Opposes punitive measures like arrests or anti-camping laws and instead advocates for compassionate, prevention-based solutions, including eviction protections, rental assistance, and legal aid.
+    2. Prioritizes permanent supportive housing with permanent services over temporary shelters and calls for better coordination between city, and state agencies, focusing on addressing root causes through long-term solutions rather than short-term fixes.
+5. Immigration: In favor
+    1. No Notable Policy 

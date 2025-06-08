@@ -14,8 +14,15 @@ export default function CandidateComparison() {
     queryFn: () => fetch("/api/elections").then(res => res.json())
   });
 
-  // Sample candidates data
-  const localCandidates = [
+  // Fetch local candidates from backend API
+  const { data: localCandidates, isLoading: candidatesLoading } = useQuery({
+    queryKey: ["/api/candidates/local"],
+    queryFn: () => fetch("/api/candidates/local").then(res => res.json()),
+    enabled: true
+  });
+
+  // Sample local candidates data (fallback for non-San Jose elections)
+  const fallbackLocalCandidates = [
     {
       id: 1,
       name: "Sarah Chen",
@@ -130,12 +137,20 @@ export default function CandidateComparison() {
       return { candidates: [], title: "Election not found" };
     }
 
-    // Determine candidates based on election type/jurisdiction
-    if (election.jurisdiction.includes('state:ca') && election.name.toLowerCase().includes('senate')) {
+    // For San Jose elections, use authentic candidate data from backend
+    if (election.name.toLowerCase().includes('san jose') || election.name.toLowerCase().includes('council district 3')) {
+      return { 
+        candidates: localCandidates || [], 
+        title: election.name,
+        isAuthentic: true
+      };
+    }
+    // For other CA state elections, use national candidates as fallback
+    else if (election.jurisdiction.includes('state:ca') && election.name.toLowerCase().includes('senate')) {
       return { candidates: nationalCandidates, title: election.name };
-    } else if (election.jurisdiction.includes('san') || election.name.toLowerCase().includes('mayor')) {
-      return { candidates: localCandidates, title: election.name };
-    } else {
+    } 
+    // Default case
+    else {
       return { candidates: [], title: `${election.name} - Candidate information not available` };
     }
   };
