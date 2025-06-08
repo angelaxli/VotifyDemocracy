@@ -786,16 +786,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       let voterInfoData = relevantVoterInfo;
 
-      // Final validation: reject data if election doesn't match user's geographic location
-      if (voterInfoData) {
+      // Strict validation: reject data if election doesn't match user's geographic location
+      if (voterInfoData && voterInfoData.election) {
         const responseState = voterInfoData.normalizedInput?.state;
-        const electionJurisdiction = voterInfoData.election?.ocdDivisionId;
+        const electionJurisdiction = voterInfoData.election.ocdDivisionId;
         const electionState = electionJurisdiction?.match(/state:([a-z]{2})/)?.[1]?.toUpperCase();
         
-        // If we have state information and it doesn't match, reject the data
-        if (addressState && responseState && addressState === responseState && 
-            electionState && addressState !== electionState) {
-          console.log(`Rejecting geographically mismatched election data: ${voterInfoData.election?.name} (${electionState}) for ${addressState} address`);
+        // Reject if election is from a different state than the user's address
+        if (addressState && electionState && addressState !== electionState) {
+          console.log(`Rejecting geographically mismatched election: ${voterInfoData.election.name} (${electionState}) for ${addressState} address`);
+          voterInfoData = null;
+        }
+        // Also reject if response state doesn't match address state
+        else if (addressState && responseState && addressState !== responseState) {
+          console.log(`Rejecting election due to state mismatch: address(${addressState}) vs response(${responseState})`);
           voterInfoData = null;
         }
       }
