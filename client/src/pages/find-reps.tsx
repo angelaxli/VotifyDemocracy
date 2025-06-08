@@ -138,6 +138,18 @@ export default function FindReps() {
                 Showing representatives for: <span className="font-semibold">{searchResults.formattedAddress}</span>
               </p>
             )}
+
+            {/* Interactive Map */}
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold text-black mb-3">Your District Map</h3>
+              <div className="bg-gray-100 rounded-lg h-64 flex items-center justify-center border-2 border-dashed border-gray-300">
+                <div className="text-center text-gray-500">
+                  <MapPin className="h-12 w-12 mx-auto mb-2" />
+                  <p className="text-sm">Interactive district map will appear here</p>
+                  <p className="text-xs mt-1">Enter an address above to see your electoral districts</p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Results Section */}

@@ -64,18 +64,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ error: "Google API key not configured" });
       }
 
-      // Call Google Civic Information API - correct endpoint
-      const googleApiUrl = `https://www.googleapis.com/civicinfo/v2/representatives?key=${googleApiKey}&address=${encodeURIComponent(address)}`;
+      // Try Google Civic Information API with proper endpoint format
+      let data: GoogleCivicResponse | null = null;
       
-      const response = await fetch(googleApiUrl);
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Google Civic API error:", response.status, response.statusText, errorText);
-        return res.status(500).json({ error: "Failed to fetch representative data" });
+      try {
+        // Use the correct Google Civic Information API endpoint
+        const response = await fetch(`https://www.googleapis.com/civicinfo/v2/representatives?key=${googleApiKey}&address=${encodeURIComponent(address)}&levels=country&levels=administrativeArea1&levels=locality&roles=headOfState&roles=headOfGovernment&roles=deputyHeadOfGovernment&roles=governmentOfficer&roles=executiveCouncil&roles=legislatorUpperBody&roles=legislatorLowerBody&roles=highestCourtJudge&roles=judge&roles=schoolBoard&roles=specialPurposeOfficer`);
+        
+        if (response.ok) {
+          data = await response.json();
+        } else {
+          const errorText = await response.text();
+          console.error("Google Civic API error:", response.status, response.statusText, errorText);
+        }
+      } catch (error) {
+        console.error("Google Civic API request failed:", error);
       }
 
-      const data: GoogleCivicResponse = await response.json();
-      
+      // If Google API fails, provide helpful error message
+      if (!data) {
+        return res.status(500).json({ 
+          error: "Unable to fetch representative data from Google Civic Information API",
+          message: "Please ensure your Google API key has the Civic Information API enabled and has proper permissions.",
+          helpUrl: "https://console.cloud.google.com/apis/library/civicinfo.googleapis.com"
+        });
+      }
+
       // Transform Google API data to our format
       const representatives = [];
       
