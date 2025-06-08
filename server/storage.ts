@@ -110,8 +110,8 @@ export class MemStorage implements IStorage {
         phone: null,
         email: "info@anthonyforsanjose.com",
         website: "https://anthonyforsanjose.com",
-        photoUrl: null,
-        age: null,
+        photoUrl: "@assets/Screenshot 2025-06-08 at 4.17.43 PM_1749424672840.png",
+        age: 33,
         background: "Planning Commission Chair with extensive experience in urban planning and community development",
         positions: {
           "Affordable Housing & Homelessness": "Support housing at all income levels, cut bureaucracy, expand cost-effective shelters, strengthen tenant protections, invest in prevention programs",
@@ -138,8 +138,8 @@ export class MemStorage implements IStorage {
         phone: null,
         email: "gabby@gabbychavezlopez.com",
         website: "https://gabbychavezlopez.com",
-        photoUrl: null,
-        age: null,
+        photoUrl: "@assets/Screenshot 2025-06-08 at 4.17.46 PM_1749424676757.png",
+        age: 37,
         background: "Executive Director of the Latina Coalition of Silicon Valley with extensive community organizing and advocacy experience",
         positions: {
           "Public Safety and Beautify Neighborhoods": "Expand community policing and foot patrols, utilize technology for law enforcement, maintain safe public spaces, enhance cleanliness programs",

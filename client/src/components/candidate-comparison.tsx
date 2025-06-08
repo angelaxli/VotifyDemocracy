@@ -221,9 +221,19 @@ export default function CandidateComparison() {
           <div className="grid md:grid-cols-2 gap-8">
             {candidates.map((candidate: any) => (
               <div key={candidate.id} className="bg-white border-2 border-gray-200 rounded-xl p-6">
-                {/* Candidate photo placeholder */}
-                <div className={`w-32 h-32 bg-gradient-to-br ${getPartyColor(candidate.party)} rounded-full flex items-center justify-center mx-auto mb-6`}>
-                  <User className="text-white text-4xl" />
+                {/* Candidate photo */}
+                <div className="w-32 h-32 mx-auto mb-6">
+                  {candidate.photoUrl ? (
+                    <img 
+                      src={candidate.photoUrl} 
+                      alt={`${candidate.name} profile photo`}
+                      className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
+                    />
+                  ) : (
+                    <div className={`w-32 h-32 bg-gradient-to-br ${getPartyColor(candidate.party)} rounded-full flex items-center justify-center`}>
+                      <User className="text-white text-4xl" />
+                    </div>
+                  )}
                 </div>
                 
                 <div className="text-center mb-6">
