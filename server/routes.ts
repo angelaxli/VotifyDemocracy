@@ -719,50 +719,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const electionsData: GoogleElectionsResponse = await electionsResponse.json();
       
-      // Step 2: Try to get voter info without election ID first, then with specific elections
+      // Step 2: Find elections relevant to the user's address by testing each election ID
       const encodedAddress = encodeURIComponent(address);
-      let voterInfoData = null;
+      let relevantVoterInfo = null;
 
-      // First try without specific election ID
-      try {
-        const generalVoterUrl = `https://www.googleapis.com/civicinfo/v2/voterinfo?address=${encodedAddress}&key=${googleApiKey}`;
-        const generalResponse = await fetch(generalVoterUrl);
-        
-        if (generalResponse.ok) {
-          const data = await generalResponse.json();
-          if (data.pollingLocations || data.contests || data.electionAdministrationBody || data.election) {
-            voterInfoData = data;
-          }
-        }
-      } catch (generalError) {
-        console.log("General voter info query failed, trying specific elections");
-      }
-
-      // If general query didn't work, try specific elections
-      if (!voterInfoData) {
-        for (const election of electionsData.elections.slice(0, 10)) { // Limit to first 10 elections
-          try {
-            const voterInfoUrl = `https://www.googleapis.com/civicinfo/v2/voterinfo?address=${encodedAddress}&electionId=${election.id}&key=${googleApiKey}`;
-            const voterResponse = await fetch(voterInfoUrl);
-            
-            if (voterResponse.ok) {
-              const data = await voterResponse.json();
-              
-              // Check if response contains valid voter information
-              if (data.pollingLocations || data.contests || data.electionAdministrationBody || data.election) {
-                voterInfoData = data;
-                break; // Use the first relevant election found
-              }
-            }
-          } catch (electionError) {
-            // Continue to next election if this one fails
+      // Extract state from user address for geographic validation
+      const addressState = address.match(/([A-Z]{2})\s*\d{5}/)?.[1];
+      
+      // For each election, test if it's relevant to the address
+      for (const election of electionsData.elections) {
+        try {
+          // Pre-filter elections by geographic relevance before making API calls
+          const electionState = election.ocdDivisionId?.match(/state:([a-z]{2})/)?.[1]?.toUpperCase();
+          
+          // Skip elections that are clearly not relevant to the user's state
+          if (addressState && electionState && addressState !== electionState) {
+            console.log(`Skipping geographically irrelevant election: ${election.name} (${electionState} vs ${addressState})`);
             continue;
           }
+          
+          const voterInfoUrl = `https://www.googleapis.com/civicinfo/v2/voterinfo?address=${encodedAddress}&electionId=${election.id}&key=${googleApiKey}`;
+          const voterResponse = await fetch(voterInfoUrl);
+          
+          if (voterResponse.ok) {
+            const data = await voterResponse.json();
+            
+            // Verify the response contains meaningful voter information
+            const hasPollingInfo = data.pollingLocations?.length > 0;
+            const hasContests = data.contests?.length > 0;
+            const hasStateInfo = data.state?.length > 0;
+            const responseState = data.normalizedInput?.state;
+            
+            // Additional validation: ensure response state matches user's state
+            if ((hasPollingInfo || hasContests || hasStateInfo) && 
+                (!addressState || !responseState || addressState === responseState)) {
+              relevantVoterInfo = data;
+              console.log(`Found relevant election for ${addressState}: ${election.name} (ID: ${election.id})`);
+              break;
+            } else if (responseState && addressState && responseState !== addressState) {
+              console.log(`Rejecting election ${election.name} - response state ${responseState} doesn't match address state ${addressState}`);
+            }
+          }
+        } catch (electionError) {
+          // Continue to next election if this one fails
+          continue;
+        }
+      }
+
+      // If no specific election worked, try general query as fallback
+      if (!relevantVoterInfo) {
+        try {
+          const generalVoterUrl = `https://www.googleapis.com/civicinfo/v2/voterinfo?address=${encodedAddress}&key=${googleApiKey}`;
+          const generalResponse = await fetch(generalVoterUrl);
+          
+          if (generalResponse.ok) {
+            const data = await generalResponse.json();
+            if (data.pollingLocations?.length > 0 || data.contests?.length > 0 || data.state?.length > 0) {
+              relevantVoterInfo = data;
+              console.log("Using general voter info query result");
+            }
+          }
+        } catch (generalError) {
+          console.log("General voter info query also failed");
+        }
+      }
+
+      let voterInfoData = relevantVoterInfo;
+
+      // Final validation: reject data if election doesn't match user's geographic location
+      if (voterInfoData) {
+        const responseState = voterInfoData.normalizedInput?.state;
+        const electionJurisdiction = voterInfoData.election?.ocdDivisionId;
+        const electionState = electionJurisdiction?.match(/state:([a-z]{2})/)?.[1]?.toUpperCase();
+        
+        // If we have state information and it doesn't match, reject the data
+        if (addressState && responseState && addressState === responseState && 
+            electionState && addressState !== electionState) {
+          console.log(`Rejecting geographically mismatched election data: ${voterInfoData.election?.name} (${electionState}) for ${addressState} address`);
+          voterInfoData = null;
         }
       }
 
       if (!voterInfoData) {
-        // Try to get at least basic election administration info for the state
+        // Return only state-level information from authentic sources
         try {
           // Extract state from address for basic info
           const parts = address.split(',').map((part: string) => part.trim());
@@ -775,6 +814,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
             }
           }
 
+          // Only return authentic state-level election administration data
+          const stateInfo = state === 'CA' ? {
+            name: "California",
+            electionAdministrationBody: {
+              name: "Secretary of State",
+              electionInfoUrl: "https://www.sos.ca.gov/elections/",
+              electionRegistrationUrl: "https://registertovote.ca.gov/",
+              electionRegistrationConfirmationUrl: "https://voterstatus.sos.ca.gov",
+              votingLocationFinderUrl: "https://www.sos.ca.gov/elections/polling-place",
+              ballotInfoUrl: "https://voterstatus.sos.ca.gov/",
+              correspondenceAddress: {
+                line1: "1500 11th Street, 5th Floor",
+                city: "Sacramento", 
+                state: "California",
+                zip: "95814"
+              }
+            }
+          } : null;
+
           return res.json({
             election: null,
             normalizedAddress: address,
@@ -782,22 +840,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
             earlyVoteSites: [],
             dropOffLocations: [],
             contests: [],
-            state: state ? [{
-              name: state,
-              electionAdministrationBody: {
-                name: `${state} Secretary of State`,
-                electionInfoUrl: `https://www.${state.toLowerCase()}.gov/elections`,
-                electionRegistrationUrl: `https://www.${state.toLowerCase()}.gov/voter-registration`,
-                correspondenceAddress: null
-              }
-            }] : [],
-            electionAdministration: state ? {
-              name: `${state} Secretary of State`,
-              electionInfoUrl: `https://www.${state.toLowerCase()}.gov/elections`,
-              electionRegistrationUrl: `https://www.${state.toLowerCase()}.gov/voter-registration`,
-              correspondenceAddress: null
-            } : null,
-            message: "Detailed voter information is not currently available from the Google Civic Information API for this address. Contact your local election office for specific polling information."
+            state: stateInfo ? [stateInfo] : [],
+            electionAdministration: stateInfo?.electionAdministrationBody || null,
+            message: "Specific election details are not currently available. Use the provided official links to find current voting information for your area."
           });
         } catch (fallbackError) {
           return res.json({
@@ -809,7 +854,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             contests: [],
             state: [],
             electionAdministration: null,
-            message: "Voter information is not currently available from the Google Civic Information API for this address."
+            message: "Voter information is not currently available for this address."
           });
         }
       }
