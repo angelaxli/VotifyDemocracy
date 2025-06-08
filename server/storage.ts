@@ -20,16 +20,16 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
+
   getRepresentativesByJurisdiction(jurisdiction: string): Promise<Representative[]>;
   createRepresentative(representative: InsertRepresentative): Promise<Representative>;
-  
+
   getCandidatesByRaceType(raceType: string): Promise<Candidate[]>;
   createCandidate(candidate: InsertCandidate): Promise<Candidate>;
-  
+
   getElectionsByJurisdiction(jurisdiction: string): Promise<Election[]>;
   createElection(election: InsertElection): Promise<Election>;
-  
+
   createAddressSearch(search: InsertAddressSearch): Promise<AddressSearch>;
   getRecentAddressSearches(): Promise<AddressSearch[]>;
 }
@@ -57,7 +57,7 @@ export class MemStorage implements IStorage {
     this.currentCandidateId = 1;
     this.currentElectionId = 1;
     this.currentSearchId = 1;
-    
+
     this.seedData();
   }
 
