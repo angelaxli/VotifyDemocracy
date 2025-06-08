@@ -1,9 +1,10 @@
 import { apiRequest } from "./queryClient";
+import type { Representative } from "@shared/schema";
 
 export interface RepresentativeSearchResponse {
-  federal: any[];
-  state: any[];
-  local: any[];
+  federal: Representative[];
+  state: Representative[];
+  local: Representative[];
   formattedAddress: string;
   jurisdiction: string;
 }

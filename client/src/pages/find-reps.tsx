@@ -16,15 +16,17 @@ import { apiRequest } from "@/lib/queryClient";
 import { Representative } from "@shared/schema";
 
 interface RepresentativeWithStances extends Representative {
-  socialLinks?: Array<{ type: string; url: string }>;
-  stances?: Record<string, string>;
-  recentBills?: Array<{ title: string; position: string; description: string }>;
+  socialLinks: Array<{ type: string; url: string }> | null;
+  stances: Record<string, string> | null;
+  recentBills: Array<{ title: string; position: string; description: string }> | null;
 }
 
 export default function FindReps() {
   const [address, setAddress] = useState("");
   const [searchResults, setSearchResults] = useState<{
-    representatives: RepresentativeWithStances[];
+    federal: RepresentativeWithStances[];
+    state: RepresentativeWithStances[];
+    local: RepresentativeWithStances[];
     formattedAddress: string;
     jurisdiction: string;
   } | null>(null);
