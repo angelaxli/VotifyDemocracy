@@ -695,10 +695,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get voter information for address and election
+  // Get voter information for address with dynamic election ID lookup
   app.post("/api/voterinfo", async (req, res) => {
     try {
-      const { address, electionId } = req.body;
+      const { address } = req.body;
       
       if (!address) {
         return res.status(400).json({ error: "Address is required" });
@@ -709,33 +709,120 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ error: "Google Civic API key not configured" });
       }
 
-      const encodedAddress = encodeURIComponent(address);
-      let voterInfoUrl = `https://www.googleapis.com/civicinfo/v2/voterinfo?key=${googleApiKey}&address=${encodedAddress}`;
+      // Step 1: Get all upcoming elections
+      const electionsUrl = `https://civicinfo.googleapis.com/civicinfo/v2/elections?key=${googleApiKey}`;
+      const electionsResponse = await fetch(electionsUrl);
       
-      if (electionId) {
-        voterInfoUrl += `&electionId=${electionId}`;
+      if (!electionsResponse.ok) {
+        throw new Error(`Elections API error: ${electionsResponse.status}`);
+      }
+      
+      const electionsData: GoogleElectionsResponse = await electionsResponse.json();
+      
+      // Step 2: Try to get voter info without election ID first, then with specific elections
+      const encodedAddress = encodeURIComponent(address);
+      let voterInfoData = null;
+
+      // First try without specific election ID
+      try {
+        const generalVoterUrl = `https://www.googleapis.com/civicinfo/v2/voterinfo?address=${encodedAddress}&key=${googleApiKey}`;
+        const generalResponse = await fetch(generalVoterUrl);
+        
+        if (generalResponse.ok) {
+          const data = await generalResponse.json();
+          if (data.pollingLocations || data.contests || data.electionAdministrationBody || data.election) {
+            voterInfoData = data;
+          }
+        }
+      } catch (generalError) {
+        console.log("General voter info query failed, trying specific elections");
       }
 
-      const response = await fetch(voterInfoUrl);
-      if (!response.ok) {
-        const errorText = await response.text();
-        return res.status(response.status).json({ 
-          error: "Voter information not available",
-          details: errorText
-        });
+      // If general query didn't work, try specific elections
+      if (!voterInfoData) {
+        for (const election of electionsData.elections.slice(0, 10)) { // Limit to first 10 elections
+          try {
+            const voterInfoUrl = `https://www.googleapis.com/civicinfo/v2/voterinfo?address=${encodedAddress}&electionId=${election.id}&key=${googleApiKey}`;
+            const voterResponse = await fetch(voterInfoUrl);
+            
+            if (voterResponse.ok) {
+              const data = await voterResponse.json();
+              
+              // Check if response contains valid voter information
+              if (data.pollingLocations || data.contests || data.electionAdministrationBody || data.election) {
+                voterInfoData = data;
+                break; // Use the first relevant election found
+              }
+            }
+          } catch (electionError) {
+            // Continue to next election if this one fails
+            continue;
+          }
+        }
       }
 
-      const data = await response.json();
+      if (!voterInfoData) {
+        // Try to get at least basic election administration info for the state
+        try {
+          // Extract state from address for basic info
+          const parts = address.split(',').map((part: string) => part.trim());
+          let state = "";
+          if (parts.length >= 3) {
+            const lastPart = parts[parts.length - 1];
+            const stateMatch = lastPart.match(/([A-Z]{2})/);
+            if (stateMatch) {
+              state = stateMatch[1];
+            }
+          }
+
+          return res.json({
+            election: null,
+            normalizedAddress: address,
+            pollingLocations: [],
+            earlyVoteSites: [],
+            dropOffLocations: [],
+            contests: [],
+            state: state ? [{
+              name: state,
+              electionAdministrationBody: {
+                name: `${state} Secretary of State`,
+                electionInfoUrl: `https://www.${state.toLowerCase()}.gov/elections`,
+                electionRegistrationUrl: `https://www.${state.toLowerCase()}.gov/voter-registration`,
+                correspondenceAddress: null
+              }
+            }] : [],
+            electionAdministration: state ? {
+              name: `${state} Secretary of State`,
+              electionInfoUrl: `https://www.${state.toLowerCase()}.gov/elections`,
+              electionRegistrationUrl: `https://www.${state.toLowerCase()}.gov/voter-registration`,
+              correspondenceAddress: null
+            } : null,
+            message: "Detailed voter information is not currently available from the Google Civic Information API for this address. Contact your local election office for specific polling information."
+          });
+        } catch (fallbackError) {
+          return res.json({
+            election: null,
+            normalizedAddress: address,
+            pollingLocations: [],
+            earlyVoteSites: [],
+            dropOffLocations: [],
+            contests: [],
+            state: [],
+            electionAdministration: null,
+            message: "Voter information is not currently available from the Google Civic Information API for this address."
+          });
+        }
+      }
       
       const voterInfo = {
-        election: data.election || null,
-        normalizedAddress: data.normalizedInput || null,
-        pollingLocations: data.pollingLocations || [],
-        earlyVoteSites: data.earlyVoteSites || [],
-        dropOffLocations: data.dropOffLocations || [],
-        contests: data.contests || [],
-        state: data.state || [],
-        electionAdministration: data.state?.[0]?.electionAdministrationBody || null
+        election: voterInfoData.election || null,
+        normalizedAddress: voterInfoData.normalizedInput || null,
+        pollingLocations: voterInfoData.pollingLocations || [],
+        earlyVoteSites: voterInfoData.earlyVoteSites || [],
+        dropOffLocations: voterInfoData.dropOffLocations || [],
+        contests: voterInfoData.contests || [],
+        state: voterInfoData.state || [],
+        electionAdministration: voterInfoData.state?.[0]?.electionAdministrationBody || null
       };
 
       res.json(voterInfo);
